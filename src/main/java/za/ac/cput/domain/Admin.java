@@ -1,3 +1,9 @@
+/*
+ * Admin.java
+ * Goal POJO Class
+ * Author: Scelo Kevin Nyandeni(23018695)
+ * Date: 11 May 2025*/
+
 package za.ac.cput.domain;
 
 public class Admin extends User {
