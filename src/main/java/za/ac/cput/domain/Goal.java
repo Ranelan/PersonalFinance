@@ -46,6 +46,16 @@ public class Goal {
         return Deadline;
     }
 
+    @Override
+    public String toString() {
+        return "Goal{" +
+                "goalId=" + goalId +
+                ", goalName='" + goalName + '\'' +
+                ", targetAmount=" + targetAmount +
+                ", Deadline=" + Deadline +
+                '}';
+    }
+
     public static class GoalBuilder{
         private Long goalId;
         private String goalName;
