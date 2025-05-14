@@ -45,6 +45,16 @@ public class Budget {
         return limitAmount;
     }
 
+    @Override
+    public String toString() {
+        return "Budget{" +
+                "budgetId=" + budgetId +
+                ", month='" + month + '\'' +
+                ", year=" + year +
+                ", limitAmount=" + limitAmount +
+                '}';
+    }
+
     public static class BudgetBuilder {
         private Long budgetId;
         private String month;
