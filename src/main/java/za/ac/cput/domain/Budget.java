@@ -5,17 +5,26 @@
 
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Budget {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long budgetId;
     private String month;
-    private int year;
+    private String year;
     private double limitAmount;
 
     public Budget() {
 
     }
 
-    public Budget(Long budgetId, String month, int year, double limitAmount) {
+    public Budget(Long budgetId, String month, String year, double limitAmount) {
         this.budgetId = budgetId;
         this.month = month;
         this.year = year;
@@ -37,7 +46,7 @@ public class Budget {
         return month;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
@@ -58,7 +67,7 @@ public class Budget {
     public static class BudgetBuilder {
         private Long budgetId;
         private String month;
-        private int year;
+        private String year;
         private double limitAmount;
 
         public BudgetBuilder setBudgetId(Long budgetId) {
@@ -71,7 +80,7 @@ public class Budget {
             return this;
         }
 
-        public BudgetBuilder setYear(int year) {
+        public BudgetBuilder setYear(String year) {
             this.year = year;
             return this;
         }
