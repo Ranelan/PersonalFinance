@@ -14,7 +14,7 @@ public class RecurringTransactionFactory {
     //builder method for Recurring... has a private access in RecurringTransaction
         return new RecurringTransaction.RecurringTransactionBuilder()
                 .setReccuranceType(reccuranceType)
-                .setMextExecution(nextExecution)
+                .setMextExecution(MextExecution)
                 .build();
 
 
