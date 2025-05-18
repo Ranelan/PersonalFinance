@@ -1,3 +1,8 @@
+/* GoalFactoryTest.java
+     GoalFactoryTest class
+     Author: Ranelani Engel(221813853)
+     Date: 17 May 2025 */
+
 package za.ac.cput.factory;
 
 import org.junit.jupiter.api.BeforeEach;
