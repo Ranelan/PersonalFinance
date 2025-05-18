@@ -44,7 +44,7 @@ public class RecurringTransaction {
                 '}';
     }
 
-    private static class RecurringTransactionBuilder {
+    public static class RecurringTransactionBuilder {
         private Long recurringTransactionId;
         private String reccuranceType;
         private LocalDate MextExecution;
