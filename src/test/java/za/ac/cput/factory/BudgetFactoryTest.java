@@ -1,5 +1,10 @@
 package za.ac.cput.factory;
 
+/* BudgetFactoryTest.java
+     BudgetFactoryTest class
+     Author: Ranelani Engel(221813853)
+     Date: 17 May 2025 */
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import za.ac.cput.domain.Budget;

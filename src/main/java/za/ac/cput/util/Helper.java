@@ -21,7 +21,7 @@ public class Helper {
         return targetAmount > 0;
     }
     public static boolean isValidCurrentAmount(double currentAmount) {
-        return currentAmount >= 0;
+        return currentAmount > 0;
     }
     public static boolean isValidDeadline(LocalDate deadline) {
         return deadline != null && deadline.isAfter(LocalDate.now());
