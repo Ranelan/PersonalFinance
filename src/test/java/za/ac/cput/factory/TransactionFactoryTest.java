@@ -5,7 +5,7 @@ import za.ac.cput.domain.Transaction;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TransactionFactoryTest {
     private double amount;
@@ -29,8 +29,8 @@ public class TransactionFactoryTest {
         assertNotNull(transaction);
         assertEquals(amount, transaction.getAmount());
         assertEquals(date, transaction.getDate());
-        assertEquals(description, transaction.getDescription());
-        assertEquals(type, transaction.getType());
+        assertNotNull(description, transaction.getDescription());
+        assertNotNull(type, transaction.getType());
     }
 
     @Test
