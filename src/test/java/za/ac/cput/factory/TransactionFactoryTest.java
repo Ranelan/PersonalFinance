@@ -27,10 +27,10 @@ public class TransactionFactoryTest {
         transaction = TransactionFactory.createTransaction(amount, date, description, type);
 
         assertNotNull(transaction);
-        assertNotNull(amount, transaction.getAmount());
-        assertNotNull(date, transaction.getDate());
-        assertNotNull(description, transaction.getDescription());
-        assertNotNull(type, transaction.getType());
+        assertEquals(amount, transaction.getAmount());
+        assertEquals(date, transaction.getDate());
+        assertEquals(description, transaction.getDescription());
+        assertEquals(type, transaction.getType());
     }
 
     @Test
