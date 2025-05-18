@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class TransactionFactory {
     public static Transaction createTransaction(double amount, LocalDate date, String description, String type) {
-        if (Helper.isValidCurrentAmount(amount) || Helper.isNullOrEmpty(String.valueOf(date)) ||
+        if (!Helper.isValidCurrentAmount(amount) || Helper.isNullOrEmpty(String.valueOf(date)) ||
         Helper.isNullOrEmpty(description) || Helper.isNullOrEmpty(type)){
             return null;
         }
