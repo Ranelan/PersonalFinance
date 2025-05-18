@@ -6,7 +6,15 @@
 
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class RegularUser extends User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String membershipID;
 
     public RegularUser() {
@@ -65,6 +73,10 @@ public class RegularUser extends User {
         public RegularUserBuilder setMembershipID(String membershipID) {
             this.membershipID = membershipID;
             return this;
+        }
+
+        public RegularUser build() {
+            return new RegularUser(this);
         }
     }
 }
