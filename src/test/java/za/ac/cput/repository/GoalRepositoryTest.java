@@ -54,14 +54,14 @@ class GoalRepositoryTest {
 
          }
 
-//    @Test
-//    void g_delete() {
-//        Goal saved = goalRepository.save(goal);
-//        goalRepository.deleteById(saved.getGoalId());
-//        Optional<Goal> found = goalRepository.findById(saved.getGoalId());
-//        assertFalse(found.isPresent());
-//        System.out.println("Deleted: " + saved);
-//    }
+    @Test
+    void g_delete() {
+        Goal saved = goalRepository.save(goal);
+        goalRepository.deleteById(saved.getGoalId());
+        Optional<Goal> found = goalRepository.findById(saved.getGoalId());
+        assertFalse(found.isPresent());
+        System.out.println("Deleted: " + saved);
+    }
 
     @Test
     void d_findAll() {

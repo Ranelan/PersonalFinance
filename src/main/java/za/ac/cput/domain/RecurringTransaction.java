@@ -6,68 +6,76 @@
 
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDate;
 
+@Entity
 public class RecurringTransaction {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long recurringTransactionId;
-    private String reccuranceType;
-    private LocalDate MextExecution;
+    private String recurrenceType;
+    private LocalDate nextExecution;
 
-    private RecurringTransaction() {
+    protected RecurringTransaction() {
     }
 
     public RecurringTransaction(RecurringTransactionBuilder recurringTransactionBuilder) {
         this.recurringTransactionId = recurringTransactionBuilder.recurringTransactionId;
-        this.reccuranceType = recurringTransactionBuilder.reccuranceType;
-        this.MextExecution = recurringTransactionBuilder.MextExecution;
+        this.recurrenceType = recurringTransactionBuilder.recurrenceType;
+        this.nextExecution = recurringTransactionBuilder.nextExecution;
     }
 
     public Long getRecurringTransactionId() {
         return recurringTransactionId;
     }
 
-    public String getReccuranceType() {
-        return reccuranceType;
+    public String getRecurrenceType() {
+        return recurrenceType;
     }
 
-    public LocalDate getMextExecution() {
-        return MextExecution;
+    public LocalDate getNextExecution() {
+        return nextExecution;
     }
 
     @Override
     public String toString() {
         return "RecurringTransaction{" +
                 "recurringTransactionId=" + recurringTransactionId +
-                ", reccuranceType='" + reccuranceType + '\'' +
-                ", MextExecution=" + MextExecution +
+                ", recurrenceType='" + recurrenceType + '\'' +
+                ", nextExecution=" + nextExecution +
                 '}';
     }
 
     public static class RecurringTransactionBuilder {
         private Long recurringTransactionId;
-        private String reccuranceType;
-        private LocalDate MextExecution;
+        private String recurrenceType;
+        private LocalDate nextExecution;
 
         public RecurringTransactionBuilder setRecurringTransactionId(Long recurringTransactionId) {
             this.recurringTransactionId = recurringTransactionId;
             return this;
         }
 
-        public RecurringTransactionBuilder setReccuranceType(String reccuranceType) {
-            this.reccuranceType = reccuranceType;
+        public RecurringTransactionBuilder setRecurrenceType(String recurrenceType) {
+            this.recurrenceType = recurrenceType;
             return this;
         }
 
-        public RecurringTransactionBuilder setMextExecution(LocalDate mextExecution) {
-            MextExecution = mextExecution;
+        public RecurringTransactionBuilder setNextExecution(LocalDate nextExecution) {
+            nextExecution = nextExecution;
             return this;
         }
 
         public RecurringTransactionBuilder copy(RecurringTransaction recurringTransaction) {
             this.recurringTransactionId = recurringTransaction.recurringTransactionId;
-            this.reccuranceType = recurringTransaction.reccuranceType;
-            this.MextExecution = recurringTransaction.MextExecution;
+            this.recurrenceType = recurringTransaction.recurrenceType;
+            this.nextExecution = recurringTransaction.nextExecution;
             return this;
         }
 
