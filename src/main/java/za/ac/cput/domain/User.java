@@ -5,12 +5,10 @@
  * Date: 11 May 2025*/
 package za.ac.cput.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
