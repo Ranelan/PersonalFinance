@@ -27,7 +27,7 @@ class CategoryFactoryTest {
 
     @Test
     void createCategory() {
-        category = CategoryFactory.createCategory(categoryId, name, type);
+        category = CategoryFactory.createCategory(name, type);
         assertNotNull(category);
         assertEquals(categoryId, category.getCategoryId());
         assertEquals(name, category.getName());
@@ -36,13 +36,13 @@ class CategoryFactoryTest {
 
     @Test
     void createCategoryWithInvalidName() {
-        category = CategoryFactory.createCategory(categoryId, "", type);
+        category = CategoryFactory.createCategory( "", type);
         assertNull(category);
     }
 
     @Test
     void createCategoryWithInvalidType() {
-        category = CategoryFactory.createCategory(categoryId, name, "");
+        category = CategoryFactory.createCategory( name, "");
         assertNull(category);
     }
 }
