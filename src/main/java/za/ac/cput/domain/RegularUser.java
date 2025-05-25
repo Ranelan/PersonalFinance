@@ -13,8 +13,8 @@ import jakarta.persistence.Id;
 
 @Entity
 public class RegularUser extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String membershipID;
 
     public RegularUser() {
