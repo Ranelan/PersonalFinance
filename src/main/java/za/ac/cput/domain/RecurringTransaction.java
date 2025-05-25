@@ -6,15 +6,22 @@
 
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDate;
 
+@Entity
 public class RecurringTransaction {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recurringTransactionId;
     private String reccuranceType;
     private LocalDate MextExecution;
 
-    private RecurringTransaction() {
+    public RecurringTransaction() {
     }
 
     public RecurringTransaction(RecurringTransactionBuilder recurringTransactionBuilder) {
