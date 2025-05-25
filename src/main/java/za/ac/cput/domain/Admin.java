@@ -43,8 +43,9 @@ public class Admin extends User {
                 '}';
     }
 
+
     public static class AdminBuilder {
-        private Long userID;
+        public Long userID;
         private String userName;
         private String email;
         private String password;
@@ -81,5 +82,6 @@ public class Admin extends User {
         public Admin build() {
             return new Admin(this);
         }
+
     }
 }
