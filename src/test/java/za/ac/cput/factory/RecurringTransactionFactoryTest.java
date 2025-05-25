@@ -23,8 +23,8 @@ class RecurringTransactionFactoryTest {
         transaction = RecurringTransactionFactory.createRecurringTransaction(recurrenceType, nextExecution);
 
         assertNotNull(transaction);
-        assertNotNull(recurrenceType, transaction.getReccuranceType());
-        assertEquals(nextExecution, transaction.getMextExecution());
+        assertNotNull(recurrenceType, transaction.getRecurrenceType());
+        assertEquals(nextExecution, transaction.getNextExecution());
     }
 
     @Test
