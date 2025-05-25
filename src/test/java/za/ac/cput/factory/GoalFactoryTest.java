@@ -39,7 +39,7 @@ class GoalFactoryTest {
         assertEquals(goalName, goal.getGoalName());
         assertEquals(targetAmount, goal.getTargetAmount());
         assertEquals(currentAmount, goal.getCurrentAmount());
-        assertEquals(deadline, goal.getDeadline());
+        assertEquals(deadline, goal.getDeadLine());
     }
 
     @Test
