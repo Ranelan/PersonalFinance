@@ -18,4 +18,5 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     List<Goal> findByGoalName(String goalName);
     List<Goal> findByDeadLine(LocalDate deadline);
 
+
 }
