@@ -1,3 +1,8 @@
+/* GoalRepository.java
+     Budget Controller class
+     Author: Ranelani Engel(221813853
+     Date: 25 May 2025 */
+
 package za.ac.cput.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
