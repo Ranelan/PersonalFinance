@@ -91,7 +91,7 @@ public class GoalController {
         }
     }
 
-    @GetMapping("/findAll/{goal}")
+    @GetMapping("/findAll")
     public ResponseEntity<List<Goal>> findAll(@PathVariable Goal goal) {
         List<Goal> goals = goalService.findAll(goal);
         if (goals != null && !goals.isEmpty()) {

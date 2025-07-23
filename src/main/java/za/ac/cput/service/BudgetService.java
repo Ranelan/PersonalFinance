@@ -70,4 +70,9 @@ public class BudgetService implements IBudgetService{
     public List<Budget> findByYear(String year) {
         return budgetRepository.findByYear(year);
     }
+
+    @Override
+    public List<Budget> findAll(Budget budget) {
+        return budgetRepository.findAll();
+    }
 }
