@@ -87,5 +87,17 @@ public class BudgetController {
         }
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<List<Budget>> findAll(@PathVariable Budget budget) {
+        List<Budget> budgets = budgetService.findAll(budget);
+        if (budgets != null && !budgets.isEmpty()) {
+            return ResponseEntity.ok(budgets);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 
 }
