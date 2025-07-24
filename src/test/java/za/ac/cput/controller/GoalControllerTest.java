@@ -39,11 +39,10 @@ class GoalControllerTest {
 
     @BeforeAll
     void init() {
-        // Persist RegularUser first
+
         regularUser = RegularUserFactory.createRegularUser("Ranelani Engel", "engel@example.com", "securePassword123");
         regularUser = regularUserRepository.save(regularUser);
 
-        // Create and persist goal through REST endpoint to ensure ID is assigned
         goal = GoalFactory.createGoal(
                 "Save for registration",
                 10000.00,
@@ -62,7 +61,6 @@ class GoalControllerTest {
 
     @Test
     void a_create() {
-        // Since goal is already created in @BeforeAll, just assert it exists
         assertNotNull(goal);
         assertNotNull(goal.getGoalId());
     }
@@ -93,7 +91,6 @@ class GoalControllerTest {
         assertNotNull(response.getBody());
         assertEquals(8000.00, response.getBody().getCurrentAmount());
 
-        // Update local goal reference for further tests
         goal = response.getBody();
     }
 
@@ -132,7 +129,7 @@ class GoalControllerTest {
         String url = getBaseUrl() + "/delete/" + goal.getGoalId();
         restTemplate.delete(url);
 
-        // After deletion, reading should return 404 Not Found
+
         String readUrl = getBaseUrl() + "/read/" + goal.getGoalId();
         ResponseEntity<Goal> response = restTemplate.getForEntity(readUrl, Goal.class);
 
