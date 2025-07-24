@@ -7,53 +7,41 @@ package za.ac.cput.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.domain.Goal;
 import za.ac.cput.service.IGoalService;
 
+import java.time.LocalDate;
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/goal")
 public class GoalController {
 
     private final IGoalService goalService;
 
-     @Autowired
+    @Autowired
     public GoalController(IGoalService goalService) {
         this.goalService = goalService;
     }
 
-
     @PostMapping("/create")
     public ResponseEntity<Goal> create(@RequestBody Goal goal) {
         Goal createdGoal = goalService.create(goal);
-        if (createdGoal != null) {
-            return ResponseEntity.ok(createdGoal);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return createdGoal != null ? ResponseEntity.ok(createdGoal) : ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("read/{goalId}")
+    @GetMapping("/read/{goalId}")
     public ResponseEntity<Goal> read(@PathVariable Long goalId) {
         Goal goal = goalService.read(goalId);
-        if (goal != null) {
-            return ResponseEntity.ok(goal);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return goal != null ? ResponseEntity.ok(goal) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/update")
     public ResponseEntity<Goal> update(@RequestBody Goal goal) {
         Goal updatedGoal = goalService.update(goal);
-        if (updatedGoal != null) {
-            return ResponseEntity.ok(updatedGoal);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return updatedGoal != null ? ResponseEntity.ok(updatedGoal) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/delete/{goalId}")
@@ -66,53 +54,36 @@ public class GoalController {
         }
     }
 
-    @GetMapping("/findByGoalId/{goalId}")
-    public ResponseEntity<List<Goal>> findByGoalId(@PathVariable Long goalId) {
-        List<Goal> goals = goalService.findByGoalId(goalId);
-        if (goals != null && !goals.isEmpty()) {
-            return ResponseEntity.ok(goals);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/findByGoalName/{goalName}")
     public ResponseEntity<List<Goal>> findByGoalName(@PathVariable String goalName) {
         List<Goal> goals = goalService.findByGoalName(goalName);
-        if (goals != null && !goals.isEmpty()) {
-            return ResponseEntity.ok(goals);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return goals != null && !goals.isEmpty() ? ResponseEntity.ok(goals) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/findByDeadLine/{deadLine}")
     public ResponseEntity<List<Goal>> findByDeadLine(@PathVariable String deadLine) {
-        List<Goal> goals = goalService.findByDeadLine(deadLine);
-        if (goals != null && !goals.isEmpty()) {
-            return ResponseEntity.ok(goals);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            LocalDate parsedDate = LocalDate.parse(deadLine); // Converts "2025-12-31" to LocalDate
+            List<Goal> goals = goalService.findByDeadLine(String.valueOf(parsedDate));
+            if (goals != null && !goals.isEmpty()) {
+                return ResponseEntity.ok(goals);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/findAll")
     public ResponseEntity<List<Goal>> findAll() {
-        List<Goal> goals = goalService.findAll(null);
-        if (goals != null && !goals.isEmpty()) {
-            return ResponseEntity.ok(goals);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        List<Goal> goals = goalService.findAll();
+        return goals != null && !goals.isEmpty() ? ResponseEntity.ok(goals) : ResponseEntity.noContent().build();
     }
 
     @GetMapping("/findByRegularUser_MembershipID/{membershipId}")
     public ResponseEntity<List<Goal>> findByRegularUser_MembershipID(@PathVariable String membershipId) {
         List<Goal> goals = goalService.findByRegularUser_MembershipID(membershipId);
-        if (goals != null && !goals.isEmpty()) {
-            return ResponseEntity.ok(goals);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return goals != null && !goals.isEmpty() ? ResponseEntity.ok(goals) : ResponseEntity.notFound().build();
     }
 }

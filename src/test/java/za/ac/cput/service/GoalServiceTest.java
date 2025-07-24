@@ -111,7 +111,7 @@ class GoalServiceTest {
     @Test
     @Order(7)
     void findAll() {
-        List<Goal> allGoals = goalService.findAll(null);
+        List<Goal> allGoals = goalService.findAll();
         assertNotNull(allGoals, "List of all goals should not be null");
         assertTrue(allGoals.stream().anyMatch(g -> g.getGoalId().equals(goal.getGoalId())), "Created goal should be in the list");
     }

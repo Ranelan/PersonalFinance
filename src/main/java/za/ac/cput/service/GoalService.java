@@ -84,7 +84,7 @@ public class GoalService implements IGoalService {
     }
 
     @Override
-    public List<Goal> findAll(Goal goal) {
+    public List<Goal> findAll() {
         return goalRepository.findAll();
     }
 
