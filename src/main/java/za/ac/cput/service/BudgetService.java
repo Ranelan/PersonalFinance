@@ -78,7 +78,7 @@ public class BudgetService implements IBudgetService{
     }
 
     @Override
-    public List<Budget> findAll(Budget budget) {
+    public List<Budget> findAll() {
         return budgetRepository.findAll();
     }
 }

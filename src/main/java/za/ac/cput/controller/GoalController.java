@@ -27,7 +27,7 @@ public class GoalController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<Goal> create(@PathVariable Goal goal){
+    public ResponseEntity<Goal> create(@RequestBody Goal goal) {
         Goal createdGoal = goalService.create(goal);
         if (createdGoal != null) {
             return ResponseEntity.ok(createdGoal);
@@ -97,13 +97,22 @@ public class GoalController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Goal>> findAll(@PathVariable Goal goal) {
-        List<Goal> goals = goalService.findAll(goal);
+    public ResponseEntity<List<Goal>> findAll() {
+        List<Goal> goals = goalService.findAll(null);
+        if (goals != null && !goals.isEmpty()) {
+            return ResponseEntity.ok(goals);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @GetMapping("/findByRegularUser_MembershipID/{membershipId}")
+    public ResponseEntity<List<Goal>> findByRegularUser_MembershipID(@PathVariable String membershipId) {
+        List<Goal> goals = goalService.findByRegularUser_MembershipID(membershipId);
         if (goals != null && !goals.isEmpty()) {
             return ResponseEntity.ok(goals);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

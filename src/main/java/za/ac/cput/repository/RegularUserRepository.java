@@ -20,4 +20,5 @@ public interface RegularUserRepository extends JpaRepository<RegularUser, Long> 
     List<RegularUser> findByEmail(String email);
     List<RegularUser> findByPassword(String password);
 
+
 }

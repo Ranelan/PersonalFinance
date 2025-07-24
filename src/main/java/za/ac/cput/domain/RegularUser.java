@@ -6,12 +6,10 @@
 
 package za.ac.cput.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@DiscriminatorValue("REGULAR")
 public class RegularUser extends User {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +43,27 @@ public class RegularUser extends User {
         private String userName;
         private String email;
         private String password;
+
+        public Long getUserID() {
+            return userID;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getMembershipID() {
+            return membershipID;
+        }
+
         private String membershipID;
 
         public RegularUserBuilder() {

@@ -8,14 +8,20 @@ package za.ac.cput.factory;
 import za.ac.cput.domain.RegularUser;
 import za.ac.cput.util.Helper;
 
-public class RegularUserFactory {
-    public static RegularUser createRegularUser(Long userID, String userName, String email, String password, String  membershipID) {
+import java.util.UUID;
 
-        if (Helper.isNullOrEmpty(userName) || Helper.isNullOrEmpty(email) || Helper.isNullOrEmpty(password) || Helper.isNullOrEmpty(membershipID)) {
+public class RegularUserFactory {
+    public static RegularUser createRegularUser( String userName, String email, String password) {
+
+        if (Helper.isNullOrEmpty(userName) ||
+                Helper.isNullOrEmpty(email) ||
+                Helper.isNullOrEmpty(password) ) {
             return null;
         }
+
+        String membershipID = UUID.randomUUID().toString(); // I updated it to generate a unique membership ID
+
         return new RegularUser.RegularUserBuilder()
-                .setUserID(userID)
                 .setUserName(userName)
                 .setEmail(email)
                 .setPassword(password)
