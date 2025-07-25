@@ -27,7 +27,7 @@ public class BudgetController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<Budget> create(@PathVariable Budget budget){
+    public ResponseEntity<Budget> create(@RequestBody Budget budget){
         Budget createdBudget = budgetService.create(budget);
         if (createdBudget != null) {
             return ResponseEntity.ok(createdBudget);
@@ -47,7 +47,7 @@ public class BudgetController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Budget> update(@PathVariable Budget budget) {
+    public ResponseEntity<Budget> update(@RequestBody Budget budget) {
         Budget updatedBudget = budgetService.update(budget);
         if (updatedBudget != null) {
             return ResponseEntity.ok(updatedBudget);
@@ -93,7 +93,7 @@ public class BudgetController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Budget>> findAll(@PathVariable Budget budget) {
+    public ResponseEntity<List<Budget>> findAll() {
         List<Budget> budgets = budgetService.findAll();
         if (budgets != null && !budgets.isEmpty()) {
             return ResponseEntity.ok(budgets);
@@ -101,8 +101,5 @@ public class BudgetController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
 
 }
