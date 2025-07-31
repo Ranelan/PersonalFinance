@@ -6,10 +6,7 @@
 
 package za.ac.cput.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -21,6 +18,10 @@ public class RecurringTransaction {
     private Long recurringTransactionId;
     private String recurrenceType;
     private LocalDate nextExecution;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "userID")
+    private RegularUser regularUser;
 
     protected RecurringTransaction() {
     }
@@ -56,6 +57,7 @@ public class RecurringTransaction {
         private Long recurringTransactionId;
         private String recurrenceType;
         private LocalDate nextExecution;
+        private RegularUser regularUser;
 
         public RecurringTransactionBuilder setRecurringTransactionId(Long recurringTransactionId) {
             this.recurringTransactionId = recurringTransactionId;
@@ -72,10 +74,16 @@ public class RecurringTransaction {
             return this;
         }
 
+        public RecurringTransactionBuilder setRegularUser(RegularUser regularUser) {
+            this.regularUser = regularUser;
+            return this;
+        }
+
         public RecurringTransactionBuilder copy(RecurringTransaction recurringTransaction) {
             this.recurringTransactionId = recurringTransaction.recurringTransactionId;
             this.recurrenceType = recurringTransaction.recurrenceType;
             this.nextExecution = recurringTransaction.nextExecution;
+            this.regularUser = recurringTransaction.regularUser;
             return this;
         }
 
