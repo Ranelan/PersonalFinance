@@ -7,6 +7,7 @@
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("REGULAR")
@@ -14,6 +15,17 @@ public class RegularUser extends User {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String membershipID;
+    @OneToMany(mappedBy = "regularUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "regularUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecurringTransaction> recurringTransactions;
+
+    @OneToMany(mappedBy = "regularUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Budget> budgets;
+
+    @OneToMany(mappedBy = "regularUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Goal> goals;
 
     public RegularUser() {
     }
