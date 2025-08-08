@@ -7,11 +7,19 @@
 package za.ac.cput.factory;
 
 import za.ac.cput.domain.Admin;
+import za.ac.cput.domain.Permission;
 import za.ac.cput.util.Helper;
 
+import java.util.List;
+
 public class AdminFactory {
-    public static Admin createAdmin(Long userID, String userName, String email, String password, String adminCode) {
-        if (Helper.isNullOrEmpty(userName) || Helper.isNullOrEmpty(email) || Helper.isNullOrEmpty(password) || Helper.isNullOrEmpty(adminCode)) {
+    public static Admin createAdmin(Long userID, String userName, String email, String password, String adminCode, List<Permission> permissions) {
+        if (Helper.isNullOrEmpty(userName) ||
+                Helper.isNullOrEmpty(email) ||
+                Helper.isNullOrEmpty(password) ||
+                Helper.isNullOrEmpty(adminCode)||
+               permissions == null || permissions.isEmpty()
+        ) {
             return null;
         }
         return new Admin.AdminBuilder()
@@ -20,6 +28,7 @@ public class AdminFactory {
                 .setEmail(email)
                 .setPassword(password)
                 .setAdminCode(adminCode)
+                .setPermissions(permissions)
                 .build();
     }
 }
