@@ -12,11 +12,10 @@ import java.util.List;
 
 @Entity
 public class Admin extends User {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private String adminCode;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Permission.class)
     @CollectionTable(name = "admin_permissions", joinColumns = @JoinColumn(name = "admin_id"))
     @Column(name = "permission")
     @Enumerated(EnumType.STRING)
@@ -24,6 +23,13 @@ public class Admin extends User {
 
     public Admin() {
     }
+
+    public Admin(Long userId, String userName, String email, String password,String adminCode, List<Permission> permissions ) {
+        super(userId, userName, email, password);
+        this.adminCode = adminCode;
+        this.permissions = permissions;
+    }
+
     public Admin(AdminBuilder adminBuilder) {
         super(new UserBuilder()
                 .setUserID(adminBuilder.userID)
@@ -37,6 +43,11 @@ public class Admin extends User {
         return adminCode;
     }
 
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
     @Override
     public String toString() {
         return "Admin{" +
@@ -45,6 +56,7 @@ public class Admin extends User {
                 ", userName='" + getUserName() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 ", password='" + getPassword() + '\'' +
+                ", permissions=" + permissions +
                 '}';
     }
 
@@ -55,9 +67,8 @@ public class Admin extends User {
         private String email;
         private String password;
         private String adminCode;
+        private List<Permission> permissions;
 
-        public AdminBuilder() {
-        }
 
         public AdminBuilder setUserID(Long userID) {
             this.userID = userID;
@@ -81,6 +92,21 @@ public class Admin extends User {
 
         public AdminBuilder setAdminCode(String adminCode) {
             this.adminCode = adminCode;
+            return this;
+        }
+
+        public AdminBuilder setPermissions(List<Permission> permissions) {
+            this.permissions = permissions;
+            return this;
+        }
+
+        public AdminBuilder copy(Admin admin){
+            this.adminCode = admin.adminCode;
+            this.permissions = admin.permissions;
+            this.email = admin.email;
+            this.password = admin.password;
+            this.userID = admin.userID;
+            this.userName = admin.userName;
             return this;
         }
 
