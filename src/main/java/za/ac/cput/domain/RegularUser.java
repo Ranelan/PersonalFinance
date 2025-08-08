@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("REGULAR")
+@DiscriminatorValue("REGULAR-USER")
 public class RegularUser extends User {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,12 @@ public class RegularUser extends User {
 
     public RegularUser() {
     }
+
+    public RegularUser(Long userID, String userName, String email, String password, String membershipID) {
+        super(userID, userName, email, password);
+        this.membershipID = membershipID;
+    }
+
     public RegularUser(RegularUserBuilder regularUserBuilder) {
         super(new UserBuilder()
                 .setUserID(regularUserBuilder.userID)
@@ -104,6 +110,16 @@ public class RegularUser extends User {
         public RegularUserBuilder setMembershipID(String membershipID) {
             this.membershipID = membershipID;
             return this;
+        }
+
+        public RegularUserBuilder copy(RegularUser regularUser) {
+            this.membershipID = regularUser.membershipID;
+            this.email = regularUser.email;
+            this.password = regularUser.password;
+            this.userName = regularUser.userName;
+            this.userID = regularUser.userID;
+            return this;
+
         }
 
         public RegularUser build() {
