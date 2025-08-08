@@ -48,12 +48,9 @@ public class TransactionController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id){
-        boolean deleted = transactionService.delete(Long.valueOf(id));
-        if(deleted){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        transactionService.delete(Long.valueOf(id));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/all")

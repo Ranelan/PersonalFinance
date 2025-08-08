@@ -12,12 +12,19 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userID;
-    private String userName;
-    private String email;
-    private String password;
+    protected Long userID;
+    protected String userName;
+    protected String email;
+    protected String password;
 
     public User(){
+    }
+
+    public User(Long userID, String userName, String email, String password) {
+        this.userID = userID;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
     }
 
     public User(UserBuilder userBuilder){

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import za.ac.cput.domain.Transaction;
 import za.ac.cput.repository.TransactionRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -28,8 +29,8 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public Transaction read(Long id) {
-        return transactionRepository.findById(id).orElse(null);
+    public Transaction read(Long aLong) {
+        return transactionRepository.findById(aLong).orElse(null);
     }
 
     @Override
@@ -53,18 +54,23 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public boolean delete(Long id) {
-        try {
-            transactionRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            System.out.println("Error deleting transaction: " + e.getMessage());
-            return false;
-        }
+    public List<Transaction> findAll() {
+                return transactionRepository.findAll();
     }
 
     @Override
-    public List<Transaction> findAll() {
-        return transactionRepository.findAll();
+    public List<Transaction> findByType(String type) {
+        return transactionRepository.findByType(type);
     }
+
+    @Override
+    public List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate) {
+        return transactionRepository.findByDateBetween(startDate, endDate);
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        transactionRepository.deleteById(aLong);
+    }
+
 }
