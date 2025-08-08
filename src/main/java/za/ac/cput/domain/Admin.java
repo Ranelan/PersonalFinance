@@ -6,16 +6,21 @@
 
 package za.ac.cput.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Admin extends User {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String adminCode;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "admin_permissions", joinColumns = @JoinColumn(name = "admin_id"))
+    @Column(name = "permission")
+    @Enumerated(EnumType.STRING)
+    private List<Permission> permissions;
 
     public Admin() {
     }
