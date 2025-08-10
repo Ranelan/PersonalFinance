@@ -3,6 +3,7 @@ package za.ac.cput.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import za.ac.cput.domain.Admin;
 import za.ac.cput.domain.RegularUser;
 import za.ac.cput.service.IRegularUserService;
 
@@ -19,6 +20,11 @@ public class RegularUserController {
         this.regularUserService = regularUserService;
     }
 
+    public static class LoginRequest {
+        public String usernameOrEmail;
+        public String password;
+    }
+
     @PostMapping("/create")
     public ResponseEntity<RegularUser> create(@RequestBody RegularUser regularUser) {
         RegularUser createdUser = regularUserService.create(regularUser);
@@ -27,6 +33,12 @@ public class RegularUserController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<RegularUser> logIn(@RequestBody RegularUserController.LoginRequest request) {
+        RegularUser regularUser= regularUserService.logIn(request.usernameOrEmail, request.password);
+        return (regularUser != null) ? ResponseEntity.ok(regularUser) : ResponseEntity.status(401).build();
     }
 
     @GetMapping("/read/{id}")

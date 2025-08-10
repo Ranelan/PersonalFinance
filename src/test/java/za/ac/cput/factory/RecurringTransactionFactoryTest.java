@@ -15,27 +15,28 @@ class RecurringTransactionFactoryTest {
     @BeforeEach
     void setUp(){
         recurrenceType = "Monthly";
-        nextExecution = LocalDate.of(2025, 5, 28);
+        nextExecution = LocalDate.of(2025, 9, 28);
     }
 
     @Test
-    void createRecurringTransaction(){
+    void a_createRecurringTransaction(){
         transaction = RecurringTransactionFactory.createRecurringTransaction(recurrenceType, nextExecution);
 
         assertNotNull(transaction);
-        assertNotNull(recurrenceType, transaction.getRecurrenceType());
+        assertEquals(recurrenceType, transaction.getRecurrenceType());
         assertEquals(nextExecution, transaction.getNextExecution());
     }
 
+
     @Test
-    void a_testRecurringTransaction(){
+    void b_testRecurringTransaction(){
         transaction = RecurringTransactionFactory.createRecurringTransaction(null, null);
 
         assertNull(transaction);
     }
 
     @Test
-    void b_testRecurringTransaction(){
+    void c_testRecurringTransaction(){
         transaction = RecurringTransactionFactory.createRecurringTransaction("", LocalDate.of(2025, 5, 28));
 
         assertNull(transaction);
