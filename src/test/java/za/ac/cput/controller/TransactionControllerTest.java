@@ -56,7 +56,7 @@ class TransactionControllerTest {
         regularUser = regularUserRepository.save(regularUser);
 
 
-        category = CategoryFactory.createCategory("Groceries", "Expense");
+        category = CategoryFactory.createCategory("Groceries", "Expense", transaction);
         category = categoryRepository.save(category);
 
 

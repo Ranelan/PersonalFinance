@@ -7,10 +7,9 @@
 
 package za.ac.cput.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Category {
@@ -22,13 +21,23 @@ public class Category {
     private String name;
     private String type;
 
-    public Category() {
-        // JPA requires a no-arg constructor
+    @OneToOne(mappedBy = "category")
+    private Transaction transaction;
+
+    public Category() {}
+
+    public Category(Long categoryId, String name, String type, Transaction transaction) {
+        this.categoryId = categoryId;
+        this.name = name;
+        this.type = type;
+        this.transaction = transaction;
     }
 
-    private Category(CategoryBuilder builder) {
+    public Category(CategoryBuilder builder) {
+        this.categoryId = builder.categoryId;
         this.name = builder.name;
         this.type = builder.type;
+        this.transaction = builder.transaction;
     }
 
     public Long getCategoryId() {
@@ -43,18 +52,30 @@ public class Category {
         return type;
     }
 
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
                 "categoryId=" + categoryId +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
+                ", transaction=" + transaction +
                 '}';
     }
 
     public static class CategoryBuilder {
+        private Long categoryId;
         private String name;
         private String type;
+        private Transaction transaction;
+
+        public CategoryBuilder setId(Long categoryId) {
+            this.categoryId = categoryId;
+            return this;
+        }
 
         public CategoryBuilder setName(String name) {
             this.name = name;
@@ -66,9 +87,16 @@ public class Category {
             return this;
         }
 
+        public CategoryBuilder setTransaction(Transaction transaction) {
+            this.transaction = transaction;
+            return this;
+        }
+
         public CategoryBuilder copy(Category category) {
+            this.categoryId = category.categoryId;
             this.name = category.name;
             this.type = category.type;
+            this.transaction = category.transaction;
             return this;
         }
 

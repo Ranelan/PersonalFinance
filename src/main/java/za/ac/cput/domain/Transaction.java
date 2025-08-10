@@ -82,6 +82,7 @@ public class Transaction {
         return category;
     }
 
+
     public static class TransactionBuilder {
         private Long transactionId;
         private double amount;

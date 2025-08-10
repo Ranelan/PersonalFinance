@@ -1,48 +1,57 @@
-/* Category.java
-   Category Factory class
-   Author: Lebuhang Nyanyantsi(222184353)
-   Date: 18 May 2025 */
-
 package za.ac.cput.factory;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import za.ac.cput.domain.Category;
+import za.ac.cput.domain.Transaction;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryFactoryTest {
 
-    private Long categoryId;
     private String name;
     private String type;
-    private Category category;
+    private Transaction transaction;
 
     @BeforeEach
     void setUp() {
-        categoryId = 100L;
         name = "Food";
         type = "Expense";
+
+        transaction = new Transaction.TransactionBuilder()
+                .setAmount(120.00)
+                .setDate(LocalDate.of(2025, 8, 10))
+                .setDescription("KFC lunch")
+                .setType("Expense")
+                .build();
     }
 
     @Test
-    void createCategory() {
-        category = CategoryFactory.createCategory(name, type);
+    void createCategorySuccessfully() {
+        Category category = CategoryFactory.createCategory(name, type, transaction);
         assertNotNull(category);
-        assertEquals(categoryId, category.getCategoryId());
         assertEquals(name, category.getName());
         assertEquals(type, category.getType());
+        assertEquals(transaction, category.getTransaction());
     }
 
     @Test
     void createCategoryWithInvalidName() {
-        category = CategoryFactory.createCategory( "", type);
+        Category category = CategoryFactory.createCategory("", type, transaction);
         assertNull(category);
     }
 
     @Test
     void createCategoryWithInvalidType() {
-        category = CategoryFactory.createCategory( name, "");
+        Category category = CategoryFactory.createCategory(name, "", transaction);
+        assertNull(category);
+    }
+
+    @Test
+    void createCategoryWithNullTransaction() {
+        Category category = CategoryFactory.createCategory(name, type, null);
         assertNull(category);
     }
 }

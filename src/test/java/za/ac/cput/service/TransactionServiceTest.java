@@ -51,7 +51,7 @@ class TransactionServiceTest {
         regularUser = regularUserRepository.save(regularUser);
         assertNotNull(regularUser.getUserID(), "RegularUser ID should be generated");
 
-        category = CategoryFactory.createCategory("Groceries", "Expense");
+        category = CategoryFactory.createCategory("Groceries", "Expense", transaction);
         category = categoryRepository.save(category);
         assertNotNull(category.getCategoryId(), "Category ID should be generated");
     }
