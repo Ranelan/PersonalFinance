@@ -16,7 +16,7 @@ public class AdminFactoryTest {
     public void testCreateAdmin() {
         // Create a valid Admin
         Admin admin = new Admin.AdminBuilder()
-                .setUserID(1L)
+               .setUserID(1L)
                 .setUserName("Scelo Kevin")
                 .setEmail("scelo@email.com")
                 .setPassword("password123")
