@@ -26,8 +26,8 @@ public class Helper {
     public static boolean isValidDeadline(LocalDate deadline) {
         return deadline != null && deadline.isAfter(LocalDate.now());
     }
-
-
-
+    public static boolean isValidNextExecution(LocalDate nextExecution) {
+        return nextExecution != null && !nextExecution.isBefore(LocalDate.now());
+    }
 
 }

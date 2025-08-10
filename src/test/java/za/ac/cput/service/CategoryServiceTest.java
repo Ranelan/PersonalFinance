@@ -36,32 +36,38 @@ class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        regularUser = RegularUserFactory.createRegularUser(
-                "NewUser",
-                "newuser@gmail.com",
-                "password123");
-        regularUser = regularUserRepository.save(regularUser);
+            regularUser = RegularUserFactory.createRegularUser(
+                    "NewUser",
+                    "newuser@gmail.com",
+                    "password123");
+            regularUser = regularUserRepository.save(regularUser);
 
-        transaction = new Transaction.TransactionBuilder()
-                .setAmount(100.00)
-                .setDate(LocalDate.of(2025, 1, 1))
-                .setType("Expense")
-                .setDescription("Test Transaction")
-                .setRegularUser(regularUser)
-                .build();
+            // Save Category through service, assign to field (not local var)
+            category = new Category.CategoryBuilder()
+                    .setName("Example")
+                    .setType("Expense")
+                    .build();
+            category = categoryService.create(category);
 
-        transaction = transactionRepository.save(transaction);
-        assertNotNull(transaction.getTransactionId(), "Transaction ID should be generated after save");
+            // Create and save Transaction referencing Category
+            transaction = new Transaction.TransactionBuilder()
+                    .setAmount(100.0)
+                    .setDate(LocalDate.now())
+                    .setDescription("Sample Transaction")
+                    .setType("Expense")
+                    .setRegularUser(regularUser)
+                    .setCategory(category)
+                    .build();
+            transaction = transactionRepository.save(transaction);
 
-        category = new Category.CategoryBuilder()
-                .setName("Test Category")
-                .setType("Expense")
-                .setTransaction(transaction)
-                .build();
-
-        category = categoryService.create(category);
-        assertNotNull(category.getCategoryId(), "Category ID should be generated after save");
+            // Update Category with transaction (optional to save)
+            category = new Category.CategoryBuilder()
+                    .copy(category)
+                    .setTransaction(transaction)
+                    .build();
+            category = categoryService.update(category);
     }
+
 
     @Test
     @Order(1)
@@ -90,20 +96,25 @@ class CategoryServiceTest {
     @Test
     @Order(3)
     void update() {
+        Transaction existingTransaction = category.getTransaction();
+
         Category updatedCategory = new Category.CategoryBuilder()
                 .copy(category)
                 .setName("Updated Category")
                 .setType("Updated Type")
+                .setTransaction(existingTransaction)
                 .build();
 
         Category updated = categoryService.update(updatedCategory);
-        assertNotNull(updated, "Updated category should not be null");
-        assertEquals("Updated Category", updated.getName(), "Category name should be updated");
-        assertEquals("Updated Type", updated.getType(), "Category type should be updated");
 
-        // Update the original category reference
-        category = updated;
+        assertNotNull(updated, "Updated category should not be null");
+        assertEquals("Updated Category", updated.getName());
+        assertEquals("Updated Type", updated.getType());
+
+        category = updated;  // update the reference for further tests
     }
+
+
 
     @Test
     @Order(4)
