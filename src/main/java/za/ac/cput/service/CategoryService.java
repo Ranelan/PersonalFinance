@@ -3,7 +3,9 @@ package za.ac.cput.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.domain.Category;
+import za.ac.cput.domain.Transaction;
 import za.ac.cput.repository.CategoryRepository;
+import za.ac.cput.repository.TransactionRepository;
 
 import java.util.List;
 
@@ -11,6 +13,9 @@ import java.util.List;
 public class CategoryService implements ICategoryService{
 
     private final CategoryRepository categoryRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
@@ -27,13 +32,20 @@ public class CategoryService implements ICategoryService{
         return categoryRepository.findById(aLong).orElse(null);
     }
 
+
+
     @Override
     public Category update(Category category) {
-        if(category.getCategoryId()!=null && categoryRepository.existsById(category.getCategoryId())) {
+        if(category.getCategoryId() != null && categoryRepository.existsById(category.getCategoryId())) {
+            Transaction transaction = category.getTransaction();
+            if(transaction != null && (transaction.getTransactionId() == null)) {
+                throw new IllegalStateException("Cannot save category with transient transaction entity (null id). Save transaction first.");
+            }
             return categoryRepository.save(category);
         }
         return null;
     }
+
 
     @Override
     public void delete(Long aLong) {
