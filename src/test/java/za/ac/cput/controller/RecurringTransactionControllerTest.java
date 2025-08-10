@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RecurringTransactionControllerTest {
 
     private RecurringTransaction recurringTransaction;
-    private RegularUser  regularUser;
+    private RegularUser regularUser;
 
     @Autowired
     private RegularUserRepository regularUserRepository;

@@ -9,4 +9,5 @@ public interface IRegularUserService extends IService<RegularUser, Long>{
     List<RegularUser> findByUserName(String userName);
     List<RegularUser> findByEmail(String email);
     List<RegularUser> findAll();
+    RegularUser logIn(String usernameOrEmail, String password);
 }

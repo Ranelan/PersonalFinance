@@ -70,7 +70,7 @@ public class RecurringTransaction {
         }
 
         public RecurringTransactionBuilder setNextExecution(LocalDate nextExecution) {
-            nextExecution = nextExecution;
+            this.nextExecution = nextExecution;
             return this;
         }
 
