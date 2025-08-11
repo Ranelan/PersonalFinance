@@ -13,7 +13,7 @@ import za.ac.cput.util.Helper;
 import java.util.List;
 
 public class AdminFactory {
-    public static Admin createAdmin(Long userID, String userName, String email, String password, String adminCode, List<Permission> permissions) {
+    public static Admin createAdmin( String userName, String email, String password, String adminCode, List<Permission> permissions) {
         if (Helper.isNullOrEmpty(userName) ||
                 Helper.isNullOrEmpty(email) ||
                 Helper.isNullOrEmpty(password) ||
@@ -23,7 +23,7 @@ public class AdminFactory {
             return null;
         }
         return new Admin.AdminBuilder()
-                .setUserID(userID)
+//                .setUserID(userID)
                 .setUserName(userName)
                 .setEmail(email)
                 .setPassword(password)

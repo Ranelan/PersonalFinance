@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.RegularUser;
 import za.ac.cput.repository.RegularUserRepository;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -92,15 +94,20 @@ class RegularUserServiceTest {
     @Test
     @Order(5)
     void findByUserName() {
-        RegularUser foundUser = (RegularUser) regularUserService.findByUserName("Updated User");
-        assertNotNull(foundUser, "Found user should not be null");
-        assertEquals("Updated User", foundUser.getUserName(), "User names should match");
-    }
+        List<RegularUser> users = regularUserService.findByUserName("Updated User");
+        assertFalse(users.isEmpty(), "User list should not be empty");
 
+        RegularUser user = users.get(0);
+        assertEquals("Updated User", user.getUserName());
+
+        for (RegularUser u : users) {
+            assertEquals("Updated User", u.getUserName());
+        }
+    }
     @Test
     @Order(6)
     void findByEmail() {
-        RegularUser foundUser = (RegularUser) regularUserService.findByEmail("updatedUser@gmail.com");
+        List<RegularUser> foundUser =  regularUserService.findByEmail("updatedUser@gmail.com");
         assertNotNull(foundUser, "Found user should not be null");
     }
 
