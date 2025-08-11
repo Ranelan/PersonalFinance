@@ -46,7 +46,7 @@ public class RegularUserService implements IRegularUserService{
 
     @Override
     public List<RegularUser> findByUserName(String userName) {
-        return regularUserRepository.findByUserName(userName);
+       return regularUserRepository.findByUserName(userName);
     }
 
     @Override
