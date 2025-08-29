@@ -9,9 +9,12 @@ package za.ac.cput.factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import za.ac.cput.domain.Goal;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.User;
+import za.ac.cput.domain.Role;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +24,7 @@ class GoalFactoryTest {
     private double targetAmount;
     private double currentAmount;
     private LocalDate deadline;
-    private RegularUser regularUser;
+    private User user;
 
     @BeforeEach
     void setUp() {
@@ -30,51 +33,59 @@ class GoalFactoryTest {
         currentAmount = 5000.00;
         deadline = LocalDate.of(2026, 1, 10);
 
-        // Use the factory to create a valid RegularUser
-        regularUser = RegularUserFactory.createRegularUser(
-                "Ranelani", "ranelani@example.com", "securePassword123"
+        // Use the factory to create a valid User
+        user = UserFactory.createUser(
+                "Ranelani",
+                "ranelani@example.com",
+                "SecurePassword123!",
+                new Role("REGULAR_USER"),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>()
         );
+        assertNotNull(user, "UserFactory.createUser returned null");
     }
 
     @Test
     void createGoalSuccess() {
-        Goal goal = GoalFactory.createGoal(goalName, targetAmount, currentAmount, deadline, regularUser);
+        Goal goal = GoalFactory.createGoal(goalName, targetAmount, currentAmount, deadline, user);
 
         assertNotNull(goal);
         assertEquals(goalName, goal.getGoalName());
         assertEquals(targetAmount, goal.getTargetAmount());
         assertEquals(currentAmount, goal.getCurrentAmount());
         assertEquals(deadline, goal.getDeadLine());
-        assertEquals(regularUser, goal.getRegularUser());
+        assertEquals(user, goal.getUser());
     }
 
     @Test
     void createGoalWithInvalidName() {
-        Goal goal = GoalFactory.createGoal("", targetAmount, currentAmount, deadline, regularUser);
+        Goal goal = GoalFactory.createGoal("", targetAmount, currentAmount, deadline, user);
         assertNull(goal);
     }
 
     @Test
     void createGoalWithInvalidTargetAmount() {
-        Goal goal = GoalFactory.createGoal(goalName, -5000.00, currentAmount, deadline, regularUser);
+        Goal goal = GoalFactory.createGoal(goalName, -5000.00, currentAmount, deadline, user);
         assertNull(goal);
     }
 
     @Test
     void createGoalWithInvalidCurrentAmount() {
-        Goal goal = GoalFactory.createGoal(goalName, targetAmount, -3000.00, deadline, regularUser);
+        Goal goal = GoalFactory.createGoal(goalName, targetAmount, -3000.00, deadline, user);
         assertNull(goal);
     }
 
     @Test
     void createGoalWithInvalidDeadline() {
         Goal goal = GoalFactory.createGoal(goalName, targetAmount, currentAmount,
-                LocalDate.of(2020, 1, 1), regularUser);
+                LocalDate.of(2020, 1, 1), user);
         assertNull(goal);
     }
 
     @Test
-    void createGoalWithNullRegularUser() {
+    void createGoalWithNullUser() {
         Goal goal = GoalFactory.createGoal(goalName, targetAmount, currentAmount, deadline, null);
         assertNull(goal);
     }

@@ -3,9 +3,7 @@ package za.ac.cput.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.domain.Goal;
-import za.ac.cput.domain.RegularUser;
 import za.ac.cput.repository.GoalRepository;
-import za.ac.cput.repository.RegularUserRepository;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -15,12 +13,10 @@ import java.util.List;
 public class GoalService implements IGoalService {
 
     private final GoalRepository goalRepository;
-    private final RegularUserRepository regularUserRepository; // Inject RegularUser repo
 
     @Autowired
-    public GoalService(GoalRepository goalRepository, RegularUserRepository regularUserRepository) {
+    public GoalService(GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
-        this.regularUserRepository = regularUserRepository;
     }
 
     @Override
@@ -38,15 +34,9 @@ public class GoalService implements IGoalService {
         if (goal.getGoalId() != null && goalRepository.existsById(goal.getGoalId())) {
             Goal existing = goalRepository.findById(goal.getGoalId()).orElse(null);
             if (existing != null) {
-                // Ensure RegularUser is managed before saving
-                RegularUser managedUser = null;
-                if (goal.getRegularUser() != null && goal.getRegularUser().getUserID() != null) {
-                    managedUser = regularUserRepository.findById(goal.getRegularUser().getUserID()).orElse(null);
-                }
-
                 Goal updated = new Goal.GoalBuilder()
                         .copy(existing)
-                        .setRegularUser(managedUser)
+                        .setUser(goal.getUser())
                         .setGoalName(goal.getGoalName())
                         .setTargetAmount(goal.getTargetAmount())
                         .setCurrentAmount(goal.getCurrentAmount())
@@ -88,8 +78,4 @@ public class GoalService implements IGoalService {
         return goalRepository.findAll();
     }
 
-    @Override
-    public List<Goal> findByRegularUser_MembershipID(String membershipId) {
-        return goalRepository.findByRegularUser_MembershipID(membershipId);
-    }
 }
