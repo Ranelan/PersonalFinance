@@ -21,7 +21,7 @@ public class RecurringTransaction {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userID")
-    private RegularUser regularUser;
+    private User user;
 
     protected RecurringTransaction() {
     }
@@ -30,6 +30,7 @@ public class RecurringTransaction {
         this.recurringTransactionId = recurringTransactionBuilder.recurringTransactionId;
         this.recurrenceType = recurringTransactionBuilder.recurrenceType;
         this.nextExecution = recurringTransactionBuilder.nextExecution;
+        this.user = recurringTransactionBuilder.user;
     }
 
     public Long getRecurringTransactionId() {
@@ -42,6 +43,10 @@ public class RecurringTransaction {
 
     public LocalDate getNextExecution() {
         return nextExecution;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class RecurringTransaction {
         private Long recurringTransactionId;
         private String recurrenceType;
         private LocalDate nextExecution;
-        private RegularUser regularUser;
+        private User user;
 
         public RecurringTransactionBuilder setRecurringTransactionId(Long recurringTransactionId) {
             this.recurringTransactionId = recurringTransactionId;
@@ -74,8 +79,8 @@ public class RecurringTransaction {
             return this;
         }
 
-        public RecurringTransactionBuilder setRegularUser(RegularUser regularUser) {
-            this.regularUser = regularUser;
+        public RecurringTransactionBuilder setUser(User user) {
+            this.user = user;
             return this;
         }
 
@@ -83,7 +88,7 @@ public class RecurringTransaction {
             this.recurringTransactionId = recurringTransaction.recurringTransactionId;
             this.recurrenceType = recurringTransaction.recurrenceType;
             this.nextExecution = recurringTransaction.nextExecution;
-            this.regularUser = recurringTransaction.regularUser;
+            this.user = recurringTransaction.user;
             return this;
         }
 

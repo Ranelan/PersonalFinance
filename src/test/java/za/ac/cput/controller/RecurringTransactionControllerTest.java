@@ -10,12 +10,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import za.ac.cput.domain.RecurringTransaction;
-import za.ac.cput.domain.RegularUser;
-import za.ac.cput.factory.RegularUserFactory;
-import za.ac.cput.repository.RegularUserRepository;
+import za.ac.cput.domain.Role;
+import za.ac.cput.domain.User;
+import za.ac.cput.factory.UserFactory;
+import za.ac.cput.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class RecurringTransactionControllerTest {
 
     private RecurringTransaction recurringTransaction;
-    private RegularUser regularUser;
+    private User user;
 
     @Autowired
-    private RegularUserRepository regularUserRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -42,13 +45,21 @@ class RecurringTransactionControllerTest {
 
     @BeforeEach
     void setUp() {
-        regularUser = RegularUserFactory.createRegularUser("Spring Boot", "springbootv2@gmail.com", "789456");
-        regularUser = regularUserRepository.save(regularUser);
-
+        user = UserFactory.createUser(
+            "Spring Boot",
+            "springbootv2@gmail.com",
+            "securePassword123!",
+            new Role("REGULAR_USER"),
+            new java.util.ArrayList<>(),
+            new java.util.ArrayList<>(),
+            new java.util.ArrayList<>(),
+            new java.util.ArrayList<>()
+        );
+        user = userRepository.save(user);
         recurringTransaction = new RecurringTransaction.RecurringTransactionBuilder()
                 .setRecurrenceType("Monthly")
                 .setNextExecution(LocalDate.of(2025, 8, 1))
-                .setRegularUser(regularUser)
+                .setUser(user)
                 .build();
 
         String url = getBaseUrl() + "/create";
