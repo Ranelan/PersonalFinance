@@ -23,7 +23,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private RegularUser regularUser;
+    private User user;
 
     @OneToOne
     @JoinColumn(name = "category_id")
@@ -34,13 +34,13 @@ public class Transaction {
 
     public Transaction(Long transactionId, double amount, LocalDate date,
                        String description, String type,
-                       RegularUser regularUser, Category category) {
+                       User user, Category category) {
         this.transactionId = transactionId;
         this.amount = amount;
         this.date = date;
         this.description = description;
         this.type = type;
-        this.regularUser = regularUser;
+        this.user = user;
         this.category = category;
     }
 
@@ -50,7 +50,7 @@ public class Transaction {
         this.date = builder.date;
         this.description = builder.description;
         this.type = builder.type;
-        this.regularUser = builder.regularUser;
+        this.user = builder.user;
         this.category = builder.category;
     }
 
@@ -74,12 +74,16 @@ public class Transaction {
         return type;
     }
 
-    public RegularUser getRegularUser() {
-        return regularUser;
+    public User getUser() {
+        return user;
     }
 
     public Category getCategory() {
         return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
 
@@ -89,7 +93,7 @@ public class Transaction {
         private LocalDate date;
         private String description;
         private String type;
-        private RegularUser regularUser;
+        private User user;
         private Category category;
 
         public TransactionBuilder setTransactionId(Long transactionId) {
@@ -117,8 +121,8 @@ public class Transaction {
             return this;
         }
 
-        public TransactionBuilder setRegularUser(RegularUser regularUser) {
-            this.regularUser = regularUser;
+        public TransactionBuilder setUser(User user) {
+            this.user = user;
             return this;
         }
 
@@ -133,7 +137,7 @@ public class Transaction {
             this.date = transaction.date;
             this.description = transaction.description;
             this.type = transaction.type;
-            this.regularUser = transaction.regularUser;
+            this.user = transaction.user;
             this.category = transaction.category;
             return this;
         }
