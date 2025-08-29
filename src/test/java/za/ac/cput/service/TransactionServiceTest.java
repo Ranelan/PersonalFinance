@@ -4,14 +4,18 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.Category;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.User;
 import za.ac.cput.domain.Transaction;
+import za.ac.cput.domain.Role;
+import za.ac.cput.domain.Permission;
 import za.ac.cput.factory.CategoryFactory;
-import za.ac.cput.factory.RegularUserFactory;
+import za.ac.cput.factory.UserFactory;
 import za.ac.cput.repository.CategoryRepository;
-import za.ac.cput.repository.RegularUserRepository;
+import za.ac.cput.repository.UserRepository;
+import za.ac.cput.repository.RoleRepository;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,26 +29,37 @@ class TransactionServiceTest {
     private TransactionService transactionService;
 
     @Autowired
-    private RegularUserRepository regularUserRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private Transaction transaction;
-    private RegularUser regularUser;
+    private User user;
     private Category category;
 
 
     @BeforeEach
     void setUp() {
-        // First, create and save the RegularUser
-        regularUser = RegularUserFactory.createRegularUser(
+        // Find or create Role first
+        Role role = roleRepository.findByName("REGULAR_USER").orElseGet(() -> roleRepository.save(new Role("REGULAR_USER")));
+        // First, create and save the User
+        user = UserFactory.createUser(
                 "TestUser123",
                 "testuser@example.com",
-                "securePassword123"
+                "Password123!",
+                role,
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>()
         );
-        regularUser = regularUserRepository.save(regularUser);
-        assertNotNull(regularUser.getUserID(), "RegularUser ID should be generated");
+        assertNotNull(user, "User creation failed. Check UserFactory and password requirements.");
+        user = userRepository.save(user);
+        assertNotNull(user.getUserID(), "User ID should be generated");
 
         // Create Category directly since the factory is not working properly
         category = new Category.CategoryBuilder()
@@ -62,7 +77,7 @@ class TransactionServiceTest {
                 .setDate(LocalDate.of(2025, 8, 1))
                 .setDescription("Pick n Pay groceries")
                 .setType("Expense")
-                .setRegularUser(regularUser)
+                .setUser(user)
                 .setCategory(category)
                 .build();
 
@@ -119,7 +134,6 @@ class TransactionServiceTest {
         assertFalse(transactions.isEmpty(), "Should find at least one transaction");
         assertTrue(transactions.stream().anyMatch(t -> t.getTransactionId().equals(transaction.getTransactionId())));
     }
-
 
 //    @Test
 //    @Order(5)
