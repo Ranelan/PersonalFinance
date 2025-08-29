@@ -6,14 +6,14 @@
 package za.ac.cput.factory;
 
 import za.ac.cput.domain.Goal;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.User;
 import za.ac.cput.util.Helper;
 
 import java.time.LocalDate;
 
 public class GoalFactory {
 
-    public static Goal createGoal(String goalName, double targetAmount, double currentAmount, LocalDate deadLine, RegularUser regularUser) {
+    public static Goal createGoal(String goalName, double targetAmount, double currentAmount, LocalDate deadLine, User regularUser) {
         if(Helper.isNullOrEmpty(goalName)||
            !Helper.isValidTargetAmount(targetAmount)||
            !Helper.isValidCurrentAmount(currentAmount)||
@@ -24,7 +24,7 @@ public class GoalFactory {
         }
 
         return new Goal.GoalBuilder()
-                .setRegularUser(regularUser)
+                .setUser(regularUser)
                 .setGoalName(goalName)
                 .setTargetAmount(targetAmount)
                 .setCurrentAmount(currentAmount)

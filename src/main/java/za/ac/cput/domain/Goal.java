@@ -22,18 +22,18 @@ public class Goal {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userID")
-    private RegularUser regularUser;
+    private User user;
 
     public Goal() {
     }
 
-    public Goal(Long goalId, String goalName, double targetAmount, LocalDate deadLine, double currentAmount, RegularUser regularUser) {
+    public Goal(Long goalId, String goalName, double targetAmount, LocalDate deadLine, double currentAmount, User user) {
         this.goalId = goalId;
         this.goalName = goalName;
         this.targetAmount = targetAmount;
         this.deadLine = deadLine;
         this.currentAmount = currentAmount;
-        this.regularUser = regularUser;
+        this.user = user;
     }
 
     public Goal(GoalBuilder goalBuilder) {
@@ -42,7 +42,7 @@ public class Goal {
         this.targetAmount = goalBuilder.targetAmount;
         this.currentAmount = goalBuilder.currentAmount;
         this.deadLine = goalBuilder.Deadline;
-        this.regularUser = goalBuilder.regularUser;
+        this.user = goalBuilder.user;
     }
 
     public Long getGoalId() {
@@ -64,8 +64,8 @@ public class Goal {
         return deadLine;
     }
 
-    public RegularUser getRegularUser() {
-        return regularUser;
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Goal {
                 ", targetAmount=" + targetAmount +
                 ", currentAmount=" + currentAmount +
                 ", Deadline=" + deadLine +
-                ", regularUser=" + regularUser +
+                ", user=" + user +
                 '}';
     }
 
@@ -86,7 +86,7 @@ public class Goal {
         private double targetAmount;
         private double currentAmount;
         private LocalDate Deadline;
-        private RegularUser regularUser;
+        private User user;
 
         public GoalBuilder setGoalId(Long goalId) {
             this.goalId = goalId;
@@ -111,8 +111,8 @@ public class Goal {
             this.Deadline = deadline;
             return this;
         }
-        public GoalBuilder setRegularUser(RegularUser regularUser) {
-            this.regularUser = regularUser;
+        public GoalBuilder setUser(User user) {
+            this.user = user;
             return this;
         }
 
@@ -122,7 +122,7 @@ public class Goal {
             this.targetAmount = goal.targetAmount;
             this.currentAmount = goal.currentAmount;
             this.Deadline = goal.deadLine;
-            this.regularUser = goal.regularUser;
+            this.user = goal.user;
             return this;
         }
 

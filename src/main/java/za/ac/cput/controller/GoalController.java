@@ -81,9 +81,4 @@ public class GoalController {
         return goals != null && !goals.isEmpty() ? ResponseEntity.ok(goals) : ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/findByRegularUser_MembershipID/{membershipId}")
-    public ResponseEntity<List<Goal>> findByRegularUser_MembershipID(@PathVariable String membershipId) {
-        List<Goal> goals = goalService.findByRegularUser_MembershipID(membershipId);
-        return goals != null && !goals.isEmpty() ? ResponseEntity.ok(goals) : ResponseEntity.notFound().build();
-    }
 }

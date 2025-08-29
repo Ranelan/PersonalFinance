@@ -7,10 +7,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import za.ac.cput.domain.Goal;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.User;
+import za.ac.cput.domain.Role;
 import za.ac.cput.factory.GoalFactory;
-import za.ac.cput.factory.RegularUserFactory;
-import za.ac.cput.repository.RegularUserRepository;
+import za.ac.cput.factory.UserFactory;
+import za.ac.cput.repository.UserRepository;
+import za.ac.cput.repository.RoleRepository;
 
 import java.time.LocalDate;
 
@@ -22,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GoalControllerTest {
 
     private Goal goal;
-    private RegularUser regularUser;
+    private User user;
 
     @LocalServerPort
     private int port;
@@ -31,7 +33,10 @@ class GoalControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private RegularUserRepository regularUserRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     private String getBaseUrl() {
         return "http://localhost:" + port + "/api/goal";
@@ -39,20 +44,34 @@ class GoalControllerTest {
 
     @BeforeAll
     void init() {
+        Role role = roleRepository.findByName("REGULAR_USER").orElseGet(() -> roleRepository.save(new Role("REGULAR_USER")));
 
-        regularUser = RegularUserFactory.createRegularUser("Ranelani Engel", "engel@example.com", "securePassword123");
-        regularUser = regularUserRepository.save(regularUser);
+        user = UserFactory.createUser(
+                "Ranelani Engel",
+                "engel@example.com",
+                "securePassword123!",
+                role,
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(),
+                new java.util.ArrayList<>()
+        );
+        user = userRepository.save(user);
 
         goal = GoalFactory.createGoal(
                 "Save for registration",
                 10000.00,
                 5000.00,
                 LocalDate.of(2026, 1, 10),
-                regularUser
+                user
         );
 
         String url = getBaseUrl() + "/create";
         ResponseEntity<Goal> response = restTemplate.postForEntity(url, goal, Goal.class);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("Goal creation failed. Status: " + response.getStatusCode());
+            System.out.println("Response body: " + response.getBody());
+        }
         assertEquals(HttpStatus.OK, response.getStatusCode(), "Setup create goal failed");
         goal = response.getBody();
         assertNotNull(goal);
