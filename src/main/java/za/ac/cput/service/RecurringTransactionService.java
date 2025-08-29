@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.domain.Goal;
 import za.ac.cput.domain.RecurringTransaction;
-import za.ac.cput.domain.RegularUser;
 import za.ac.cput.repository.RecurringTransactionRepository;
-import za.ac.cput.repository.RegularUserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
