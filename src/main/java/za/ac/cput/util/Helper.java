@@ -30,4 +30,14 @@ public class Helper {
         return nextExecution != null && !nextExecution.isBefore(LocalDate.now());
     }
 
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return email != null && email.matches(emailRegex);
+    }
+
+    // Password must be at least 8 characters long, contain at least one uppercase letter,
+    public static boolean isValidPassword(String password) {
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return password != null && password.matches(passwordRegex);
+    }
 }
