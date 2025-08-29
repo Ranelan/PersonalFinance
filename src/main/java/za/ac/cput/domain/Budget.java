@@ -5,6 +5,7 @@
 
 package za.ac.cput.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,18 +20,19 @@ public class Budget {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userID")
-    private RegularUser regularUser;
+    @JsonBackReference
+    private User user;
 
     public Budget() {
 
     }
 
-    public Budget(Long budgetId, String month, String year, double limitAmount, RegularUser regularUser) {
+    public Budget(Long budgetId, String month, String year, double limitAmount, User user) {
         this.budgetId = budgetId;
         this.month = month;
         this.year = year;
         this.limitAmount = limitAmount;
-        this.regularUser = regularUser;
+        this.user = user;
     }
 
     public Budget(BudgetBuilder budgetBuilder) {
@@ -38,7 +40,7 @@ public class Budget {
         this.month = budgetBuilder.month;
         this.year = budgetBuilder.year;
         this.limitAmount = budgetBuilder.limitAmount;
-        this.regularUser = budgetBuilder.regularUser;
+        this.user = budgetBuilder.user;
     }
 
     public Long getBudgetId() {
@@ -53,8 +55,8 @@ public class Budget {
         return year;
     }
 
-    public RegularUser getRegularUser() {
-        return regularUser;
+    public User getUser() {
+        return user;
     }
 
     public double getLimitAmount() {
@@ -68,7 +70,7 @@ public class Budget {
                 ", month='" + month + '\'' +
                 ", year=" + year +
                 ", limitAmount=" + limitAmount +
-                ", regularUser=" + regularUser +
+                ", user=" + user +
                 '}';
     }
 
@@ -77,7 +79,7 @@ public class Budget {
         private String month;
         private String year;
         private double limitAmount;
-        private RegularUser regularUser;
+        private User user;
 
         public BudgetBuilder setBudgetId(Long budgetId) {
             this.budgetId = budgetId;
@@ -99,8 +101,8 @@ public class Budget {
             return this;
         }
 
-        public BudgetBuilder setRegularUser(RegularUser regularUser) {
-            this.regularUser = regularUser;
+        public BudgetBuilder setUser(User user) {
+            this.user = user;
             return this;
         }
 
@@ -109,7 +111,7 @@ public class Budget {
             this.month = budget.month;
             this.year = budget.year;
             this.limitAmount = budget.limitAmount;
-            this.regularUser = budget.regularUser;
+            this.user = budget.user;
             return this;
         }
 

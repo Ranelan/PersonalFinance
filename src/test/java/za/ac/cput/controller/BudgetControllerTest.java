@@ -7,10 +7,14 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import za.ac.cput.domain.Budget;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.User;
 import za.ac.cput.factory.BudgetFactory;
-import za.ac.cput.factory.RegularUserFactory;
-import za.ac.cput.repository.RegularUserRepository;
+import za.ac.cput.factory.UserFactory;
+import za.ac.cput.repository.UserRepository;
+import za.ac.cput.repository.RoleRepository;
+import za.ac.cput.domain.Role;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class BudgetControllerTest {
 
     private Budget budget;
-    private RegularUser regularUser;
+    private User user;
 
     @Autowired
-    private RegularUserRepository regularUserRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -33,24 +40,39 @@ class BudgetControllerTest {
     private int port;
 
     private String getBaseUrl() {
-        return "http://localhost:" + port + "/api/budget";
+        return "http://localhost:" + port + "/personalFinance/api/budget";
     }
 
 
 
     @BeforeEach
     void setUp() {
-        regularUser = RegularUserFactory.createRegularUser("Ranelani Engel", "engel@example.com", "securePassword123");
-        regularUser = regularUserRepository.save(regularUser);
+        // Ensure the REGULAR_USER role exists in the DB
+        Optional<Role> roleOpt = roleRepository.findByName("REGULAR_USER");
+        Role role = roleOpt.orElseGet(() -> roleRepository.save(new Role("REGULAR_USER")));
 
-     budget = BudgetFactory.createBudget("January",
-             "2025",
-             5000.00,
-             regularUser);
+        // Use a valid password according to Helper.isValidPassword
+        String validPassword = "SecurePassword123!";
+        user = UserFactory.createUser("Ranelani Engel", "engel@example.com", validPassword,
+                role, new java.util.ArrayList<>(), new java.util.ArrayList<>(), new java.util.ArrayList<>(), new java.util.ArrayList<>());
+        assertNotNull(user, "UserFactory.createUser returned null");
+        user = userRepository.save(user);
+
+        budget = BudgetFactory.createBudget("January",
+                "2025",
+                5000.00,
+                user);
 
         String url = getBaseUrl() + "/create";
+        // First, try to get the raw response as String
+        ResponseEntity<String> rawResponse = restTemplate.postForEntity(url, budget, String.class);
+        if (rawResponse.getStatusCode().value() != 200) {
+            System.out.println("Raw response status: " + rawResponse.getStatusCode());
+            System.out.println("Raw response body: " + rawResponse.getBody());
+        }
+        assertEquals(200, rawResponse.getStatusCode().value(), "Setup create budget failed (raw)");
+        // Now, get the response as Budget
         ResponseEntity<Budget> response = restTemplate.postForEntity(url, budget, Budget.class);
-        assertEquals(200, response.getStatusCodeValue(), "Setup create budget failed");
         budget = response.getBody();
         assertNotNull(budget);
         assertNotNull(budget.getBudgetId());
@@ -69,7 +91,7 @@ class BudgetControllerTest {
     void read() {
         String url = getBaseUrl() + "/read/" + budget.getBudgetId();
         ResponseEntity<Budget> response = restTemplate.getForEntity(url, Budget.class);
-        assertEquals(200, response.getStatusCodeValue(), "Read budget failed");
+        assertEquals(200, response.getStatusCode().value(), "Read budget failed");
         Budget foundBudget = response.getBody();
         assertNotNull(foundBudget, "Found budget should not be null");
         assertEquals(budget.getBudgetId(), foundBudget.getBudgetId(), "Budget IDs should match");
@@ -96,7 +118,7 @@ class BudgetControllerTest {
                 Budget.class
         );
 
-        assertEquals(200, response.getStatusCodeValue(), "Update budget failed");
+        assertEquals(200, response.getStatusCode().value(), "Update budget failed");
 
         Budget updated = response.getBody();
         assertNotNull(updated, "Updated budget should not be null");
@@ -111,7 +133,7 @@ class BudgetControllerTest {
     void findByMonth() {
         String url = getBaseUrl() + "/findByMonth/" + budget.getMonth();
         ResponseEntity<Budget[]> response = restTemplate.getForEntity(url, Budget[].class);
-        assertEquals(200, response.getStatusCodeValue(), "Find by month failed");
+        assertEquals(200, response.getStatusCode().value(), "Find by month failed");
 
         Budget[] foundBudgets = response.getBody();
         assertNotNull(foundBudgets, "Found budgets should not be null");
@@ -127,7 +149,7 @@ class BudgetControllerTest {
     void findByLimitAmountGreaterThan() {
         String url = getBaseUrl() + "/findByLimitAmountGreaterThan/3000.00";
         ResponseEntity<Budget[]> response = restTemplate.getForEntity(url, Budget[].class);
-        assertEquals(200, response.getStatusCodeValue(), "Find by limit amount failed");
+        assertEquals(200, response.getStatusCode().value(), "Find by limit amount failed");
 
         Budget[] foundBudgets = response.getBody();
         assertNotNull(foundBudgets, "Found budgets should not be null");
@@ -143,7 +165,7 @@ class BudgetControllerTest {
     void findByYear() {
         String url = getBaseUrl() + "/findByYear/" + budget.getYear();
         ResponseEntity<Budget[]> response = restTemplate.getForEntity(url, Budget[].class);
-        assertEquals(200, response.getStatusCodeValue(), "Find by year failed");
+        assertEquals(200, response.getStatusCode().value(), "Find by year failed");
 
         Budget[] foundBudgets = response.getBody();
         assertNotNull(foundBudgets, "Found budgets should not be null");
@@ -159,7 +181,7 @@ class BudgetControllerTest {
     void findAll() {
         String url = getBaseUrl() + "/findAll";
         ResponseEntity<Budget[]> response = restTemplate.getForEntity(url, Budget[].class);
-        assertEquals(200, response.getStatusCodeValue(), "Find all budgets failed");
+        assertEquals(200, response.getStatusCode().value(), "Find all budgets failed");
 
         Budget[] allBudgets = response.getBody();
         assertNotNull(allBudgets, "List of all budgets should not be null");

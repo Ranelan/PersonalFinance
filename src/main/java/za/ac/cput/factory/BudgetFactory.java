@@ -6,26 +6,33 @@
 package za.ac.cput.factory;
 
 import za.ac.cput.domain.Budget;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.User;
 import za.ac.cput.util.Helper;
 
 public class BudgetFactory {
 
-    public static Budget createBudget(String month, String year, double limitAmount, RegularUser regularUser) {
-        if (!Helper.isValidMonth(month) ||
-                !Helper.isValidYear(year) ||
-                !Helper.isValidLimitAmount(limitAmount)||
-                regularUser == null
-        ) {
-
+    public static Budget createBudget(String month, String year, double limitAmount, User regularUser) {
+        if (!Helper.isValidMonth(month)) {
+            System.out.println("Invalid month: '" + month + "'");
             return null;
         }
-
+        if (!Helper.isValidYear(year)) {
+            System.out.println("Invalid year: '" + year + "'");
+            return null;
+        }
+        if (!Helper.isValidLimitAmount(limitAmount)) {
+            System.out.println("Invalid limitAmount: '" + limitAmount + "'");
+            return null;
+        }
+        if (regularUser == null) {
+            System.out.println("User is null");
+            return null;
+        }
         return new Budget.BudgetBuilder()
                 .setMonth(month)
                 .setYear(year)
                 .setLimitAmount(limitAmount)
-                .setRegularUser(regularUser)
+                .setUser(regularUser)
                 .build();
     }
 }
