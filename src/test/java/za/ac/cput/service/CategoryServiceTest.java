@@ -4,11 +4,13 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.Category;
-import za.ac.cput.domain.RegularUser;
+import za.ac.cput.domain.Role;
+import za.ac.cput.domain.User;
 import za.ac.cput.domain.Transaction;
-import za.ac.cput.factory.RegularUserFactory;
-import za.ac.cput.repository.RegularUserRepository;
+import za.ac.cput.factory.UserFactory;
+import za.ac.cput.repository.UserRepository;
 import za.ac.cput.repository.TransactionRepository;
+import za.ac.cput.repository.RoleRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,20 +29,33 @@ class CategoryServiceTest {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    private RegularUserRepository regularUserRepository;
+    private UserRepository userRepository;
 
-    private RegularUser regularUser;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    private User user;
 
     private Category category;
     private Transaction transaction;
 
     @BeforeEach
     void setUp() {
-            regularUser = RegularUserFactory.createRegularUser(
+            // Find or create Role first
+            Role role = roleRepository.findByName("REGULAR_USER").orElseGet(() -> roleRepository.save(new Role("REGULAR_USER")));
+
+            user = UserFactory.createUser(
                     "NewUser",
                     "newuser@gmail.com",
-                    "password123");
-            regularUser = regularUserRepository.save(regularUser);
+                    "Password123!",
+                    role, // use the found or saved role
+                    new java.util.ArrayList<>(),
+                    new java.util.ArrayList<>(),
+                    new java.util.ArrayList<>(),
+                    new java.util.ArrayList<>());
+
+            assertNotNull(user, "User creation failed. Check UserFactory and password requirements.");
+            user = userRepository.save(user);
 
             // Save Category through service, assign to field (not local var)
             category = new Category.CategoryBuilder()
@@ -55,7 +70,7 @@ class CategoryServiceTest {
                     .setDate(LocalDate.now())
                     .setDescription("Sample Transaction")
                     .setType("Expense")
-                    .setRegularUser(regularUser)
+                    .setUser(user)
                     .setCategory(category)
                     .build();
             transaction = transactionRepository.save(transaction);

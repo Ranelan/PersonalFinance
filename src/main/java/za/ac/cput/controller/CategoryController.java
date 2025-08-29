@@ -35,7 +35,7 @@ public class CategoryController {
         if(readCategory != null) {
             return ResponseEntity.ok(readCategory);
         } else{
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
 

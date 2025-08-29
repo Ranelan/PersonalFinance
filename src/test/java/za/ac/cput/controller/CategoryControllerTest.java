@@ -8,9 +8,17 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import za.ac.cput.domain.Category;
 import za.ac.cput.domain.Transaction;
+import za.ac.cput.domain.User;
+import za.ac.cput.domain.Role;
+import za.ac.cput.domain.Permission;
+import java.util.ArrayList;
+import java.util.HashSet;
 import za.ac.cput.factory.CategoryFactory;
 import za.ac.cput.factory.TransactionFactory;
 import za.ac.cput.repository.CategoryRepository;
+import za.ac.cput.repository.TransactionRepository;
+import za.ac.cput.repository.UserRepository;
+import za.ac.cput.repository.RoleRepository;
 
 import java.time.LocalDate;
 
@@ -23,12 +31,22 @@ class CategoryControllerTest {
 
     private Category category;
     private Transaction transaction;
+    private User user;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @LocalServerPort
     private int port;
@@ -39,14 +57,31 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setUp() {
+        Role savedRole = roleRepository.findByName("REGULAR_USER").orElseGet(() -> roleRepository.save(new Role("REGULAR_USER")));
+        user = za.ac.cput.factory.UserFactory.createUser(
+            "testuser",
+            "testuser@email.com",
+            "Password123!",
+            savedRole,
+            new java.util.ArrayList<>(),
+            new java.util.ArrayList<>(),
+            new java.util.ArrayList<>(),
+            new java.util.ArrayList<>()
+        );
+        user = userRepository.save(user);
         transaction = TransactionFactory.createTransaction(
                 250.00,
                 LocalDate.of(2025, 8, 10),
+                "Grocery purchase",
                 "Expense",
-                "Groceries"
+                user
         );
-
-        category = CategoryFactory.createCategory("Food", "Grocery purchase", transaction);
+        transaction = transactionRepository.save(transaction);
+        category = CategoryFactory.createCategory("Food", "Grocery", transaction);
+        category = categoryRepository.save(category);
+        // Set both sides of the one-to-one relationship
+        transaction.setCategory(category);
+        transaction = transactionRepository.save(transaction);
         assertNotNull(category);
     }
 
@@ -64,6 +99,9 @@ class CategoryControllerTest {
     @Test
     @Order(2)
     void read() {
+        assertNotNull(category, "Category should not be null before read test");
+        assertNotNull(category.getCategoryId(), "Category ID should not be null before read test");
+        System.out.println("Testing read with category ID: " + category.getCategoryId());
         String url = getBaseUrl() + "/read/" + category.getCategoryId();
         ResponseEntity<Category> response = restTemplate.getForEntity(url, Category.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
