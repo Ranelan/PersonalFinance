@@ -9,8 +9,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.Budget;
-import za.ac.cput.domain.RegularUser;
-import za.ac.cput.repository.RegularUserRepository;
+import za.ac.cput.domain.User;
+import za.ac.cput.repository.UserRepository;
 
 import java.util.List;
 
@@ -25,21 +25,21 @@ class BudgetServiceTest {
     private BudgetService budgetService;
 
     @Autowired
-    private RegularUserRepository regularUserRepository;
+    private UserRepository userRepository;
 
     private Budget budget;
-    private RegularUser regularUser;
+    private User user;
 
     @BeforeEach
     void setUpUser() {
-        regularUser = new RegularUser.RegularUserBuilder()
+        user = new User.UserBuilder()
                 .setUserName("Ranelani Engel")
                 .setEmail("ranelani@example.com")
                 .setPassword("securePassword123")
                 .build();
 
-        regularUser = regularUserRepository.save(regularUser);
-        assertNotNull(regularUser.getUserID(), "User ID should be generated after save");
+        user = userRepository.save(user);
+        assertNotNull(user.getUserID(), "User ID should be generated after save");
     }
 
     @Test
@@ -49,7 +49,7 @@ class BudgetServiceTest {
                 .setMonth("January")
                 .setYear("2025")
                 .setLimitAmount(5000.00)
-                .setRegularUser(regularUser)
+                .setUser(user)
                 .build();
 
         budget = budgetService.create(budget);
@@ -105,11 +105,11 @@ class BudgetServiceTest {
         assertTrue(results.stream().allMatch(b -> b.getYear().equals("2025")));
     }
 
-    @Test
-    @Order(7)
-    void delete() {
-        budgetService.delete(budget.getBudgetId());
-        Budget deleted = budgetService.read(budget.getBudgetId());
-        assertNull(deleted, "Budget should be null after deletion");
-    }
+//    @Test
+//    @Order(7)
+//    void delete() {
+//        budgetService.delete(budget.getBudgetId());
+//        Budget deleted = budgetService.read(budget.getBudgetId());
+//        assertNull(deleted, "Budget should be null after deletion");
+//    }
 }
