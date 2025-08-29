@@ -44,7 +44,7 @@ public class TransactionService implements ITransactionService {
                         .setDate(transaction.getDate())
                         .setDescription(transaction.getDescription())
                         .setType(transaction.getType())
-                        .setRegularUser(transaction.getRegularUser())
+                        .setUser(transaction.getUser())
                         .setCategory(transaction.getCategory())
                         .build();
                 return transactionRepository.save(updated);
