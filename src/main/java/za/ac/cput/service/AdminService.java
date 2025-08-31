@@ -174,30 +174,6 @@ public class AdminService implements IAdminService {
         return categoryRepository.findAll();
     }
 
-    @Override
-    public Map<String, Object> viewAnonymizedAnalytics() {
-        List<Transaction> transactions = transactionRepository.findAll();
-
-        long totalTransactions = transactions.size();
-        double totalAmount = transactions.stream().mapToDouble(Transaction::getAmount).sum();
-        double averageAmount = totalTransactions > 0 ? totalAmount / totalTransactions : 0;
-
-        Map<String, Long> transactionsByCategory = transactions.stream()
-                .collect(Collectors.groupingBy(t -> t.getCategory().getName(), Collectors.counting()));
-
-        Map<String, Long> transactionsByType = transactions.stream()
-                .collect(Collectors.groupingBy(Transaction::getType, Collectors.counting()));
-
-        Map<String, Object> analytics = new HashMap<>();
-        analytics.put("totalTransactions", totalTransactions);
-        analytics.put("totalAmount", totalAmount);
-        analytics.put("averageAmount", averageAmount);
-        analytics.put("transactionsByCategory", transactionsByCategory);
-        analytics.put("transactionsByType", transactionsByType);
-
-        return analytics;
-    }
-
 
     @Override
     public Map<String, Object> viewAnonymizedAnalyticsByCategory(String categoryName) {
@@ -244,15 +220,53 @@ public class AdminService implements IAdminService {
 
      // View anonymized analytics for a specific transaction type.
     @Override
+    public Map<String, Object> viewAnonymizedAnalytics() {
+        List<Transaction> transactions = transactionRepository.findAll();
+
+        long totalTransactions = transactions.size();
+        double totalAmount = transactions.stream()
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+        double averageAmount = totalTransactions > 0 ? totalAmount / totalTransactions : 0;
+
+        // Group by category safely
+        Map<String, Long> transactionsByCategory = transactions.stream()
+                .collect(Collectors.groupingBy(
+                        t -> t.getCategory() != null ? t.getCategory().getName() : "Uncategorized",
+                        Collectors.counting()
+                ));
+
+        // Group by type safely
+        Map<String, Long> transactionsByType = transactions.stream()
+                .collect(Collectors.groupingBy(
+                        t -> t.getType() != null ? t.getType() : "Unknown",
+                        Collectors.counting()
+                ));
+
+        Map<String, Object> analytics = new HashMap<>();
+        analytics.put("totalTransactions", totalTransactions);
+        analytics.put("totalAmount", totalAmount);
+        analytics.put("averageAmount", averageAmount);
+        analytics.put("transactionsByCategory", transactionsByCategory);
+        analytics.put("transactionsByType", transactionsByType);
+
+        return analytics;
+    }
+
+    @Override
     public Map<String, Object> viewAnonymizedAnalyticsByTransactionType(String transactionType) {
         List<Transaction> transactions = transactionRepository.findByType(transactionType);
-
-        Map<String, Long> countByCategory = transactions.stream()
-                .collect(Collectors.groupingBy(t -> t.getCategory().getName(), Collectors.counting()));
 
         double totalAmount = transactions.stream().mapToDouble(Transaction::getAmount).sum();
         long count = transactions.size();
         double averageAmount = count > 0 ? totalAmount / count : 0;
+
+        // Group by category safely
+        Map<String, Long> countByCategory = transactions.stream()
+                .collect(Collectors.groupingBy(
+                        t -> t.getCategory() != null ? t.getCategory().getName() : "Uncategorized",
+                        Collectors.counting()
+                ));
 
         Map<String, Object> analytics = new HashMap<>();
         analytics.put("transactionType", transactionType);

@@ -143,28 +143,36 @@ public class AdminController {
 
     //Analytics
     @GetMapping("/analytics")
-    public ResponseEntity<Void> viewAnonymizedAnalytics() {
-        adminService.viewAnonymizedAnalytics();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<String, Object>> viewAnonymizedAnalytics() {
+        Map<String, Object> analytics = adminService.viewAnonymizedAnalytics();
+        return (analytics != null && !analytics.isEmpty())
+                ? ResponseEntity.ok(analytics)
+                : ResponseEntity.ok(Map.of("message", "No analytics data found"));
     }
 
     @GetMapping("/analytics/category/{category}")
     public ResponseEntity<Map<String, Object>> viewAnonymizedAnalyticsByCategory(@PathVariable String category) {
         Map<String, Object> data = adminService.viewAnonymizedAnalyticsByCategory(category);
-        return (data != null && !data.isEmpty()) ? ResponseEntity.ok(data) : ResponseEntity.notFound().build();
+        return (data != null && !data.isEmpty())
+                ? ResponseEntity.ok(data)
+                : ResponseEntity.ok(Map.of("message", "No data found for category: " + category));
     }
 
     @GetMapping("/analytics/date-range")
-    public ResponseEntity<Void> viewAnonymizedAnalyticsByDateRange(
+    public ResponseEntity<Map<String, Object>> viewAnonymizedAnalyticsByDateRange(
             @RequestParam String startDate,
             @RequestParam String endDate) {
-        adminService.viewAnonymizedAnalyticsByDateRange(startDate, endDate);
-        return ResponseEntity.ok().build();
+        Map<String, Object> data = adminService.viewAnonymizedAnalyticsByDateRange(startDate, endDate);
+        return (data != null && !data.isEmpty())
+                ? ResponseEntity.ok(data)
+                : ResponseEntity.ok(Map.of("message", "No transactions found between " + startDate + " and " + endDate));
     }
 
     @GetMapping("/analytics/transaction-type/{transactionType}")
-    public ResponseEntity<Void> viewAnonymizedAnalyticsByTransactionType(@PathVariable String transactionType) {
-        adminService.viewAnonymizedAnalyticsByTransactionType(transactionType);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<String, Object>> viewAnonymizedAnalyticsByTransactionType(@PathVariable String transactionType) {
+        Map<String, Object> data = adminService.viewAnonymizedAnalyticsByTransactionType(transactionType);
+        return (data != null && !data.isEmpty())
+                ? ResponseEntity.ok(data)
+                : ResponseEntity.ok(Map.of("message", "No transactions found for type: " + transactionType));
     }
 }
