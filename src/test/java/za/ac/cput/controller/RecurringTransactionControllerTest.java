@@ -37,7 +37,7 @@ class RecurringTransactionControllerTest {
     private int port;
 
     private String getBaseUrl() {
-        return "http://localhost:" + port + "api/recurringTransactions";
+        return "http://localhost:" + port + "/api/recurringTransactions";
     }
 
     @BeforeEach
@@ -50,38 +50,41 @@ class RecurringTransactionControllerTest {
                 .setNextExecution(LocalDate.of(2025, 8, 1))
                 .setRegularUser(regularUser)
                 .build();
-
-        String url = getBaseUrl() + "/create";
-        ResponseEntity<RecurringTransaction> response = restTemplate.postForEntity(url, recurringTransaction, RecurringTransaction.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "Error");
-
-        recurringTransaction = response.getBody();
-        assertNotNull(recurringTransaction);
-        assertNotNull(recurringTransaction.getRecurringTransactionId());
     }
 
     @Test
     @Order(1)
     void create() {
-        assertNotNull(recurringTransaction);
-        assertNotNull(recurringTransaction.getRecurringTransactionId());
+        String url = getBaseUrl() + "/create";
+        ResponseEntity<RecurringTransaction> response = restTemplate.postForEntity(url, recurringTransaction, RecurringTransaction.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Error creating recurring transaction");
+
+        RecurringTransaction created = response.getBody();
+        assertNotNull(created);
+        assertNotNull(created.getRecurringTransactionId());
+
+        recurringTransaction = created;
     }
 
     @Test
     @Order(2)
     void read() {
+        create();
+
         String url = getBaseUrl() + "/read" + recurringTransaction.getRecurringTransactionId();
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<RecurringTransaction> response = restTemplate.getForEntity(url, RecurringTransaction.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        String found = response.getBody();
+        RecurringTransaction found = response.getBody();
         assertNotNull(found);
-        assertEquals(recurringTransaction.getRecurringTransactionId(), found);
+        assertEquals(recurringTransaction.getRecurringTransactionId(), found.getRecurringTransactionId());
     }
 
     @Test
     @Order(3)
     void update() {
+        create();
+
         RecurringTransaction updatedRecurringTransaction = new RecurringTransaction.RecurringTransactionBuilder()
                 .copy(recurringTransaction)
                 .setRecurrenceType("Yearly")
@@ -101,10 +104,12 @@ class RecurringTransactionControllerTest {
     @Test
     @Order(4)
     void delete() {
-        String url = getBaseUrl() + "/delete" + recurringTransaction.getRecurringTransactionId();
+        create();
+
+        String url = getBaseUrl() + "/delete/" + recurringTransaction.getRecurringTransactionId();
         restTemplate.delete(url);
 
-        String readUrl = getBaseUrl() + "/read" + recurringTransaction.getRecurringTransactionId();
+        String readUrl = getBaseUrl() + "/read/" + recurringTransaction.getRecurringTransactionId();
         ResponseEntity<RecurringTransaction> response = restTemplate.getForEntity(readUrl, RecurringTransaction.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -112,7 +117,9 @@ class RecurringTransactionControllerTest {
     @Test
     @Order(5)
     void findByRecurrenceType() {
-        String url = getBaseUrl() + "/findByRecurrenceType" + recurringTransaction.getRecurrenceType();
+        create();
+
+        String url = getBaseUrl() + "/findByRecurrenceType/" + recurringTransaction.getRecurrenceType();
         ResponseEntity<RecurringTransaction[]> response = restTemplate.getForEntity(url, RecurringTransaction[].class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -120,15 +127,17 @@ class RecurringTransactionControllerTest {
         assertNotNull(found);
         assertTrue(found.length > 0);
 
-        for (RecurringTransaction recurringTransaction : found) {
-            assertEquals("Monthly", recurringTransaction.getRecurrenceType());
+        for (RecurringTransaction rt : found) {
+            assertEquals("Monthly", rt.getRecurrenceType());
         }
     }
 
     @Test
     @Order(6)
     void findByNextExecution() {
-        String url = getBaseUrl() + "/findByNextExecution" + recurringTransaction.getNextExecution();
+        create();
+
+        String url = getBaseUrl() + "/findByNextExecution/" + recurringTransaction.getNextExecution();
         ResponseEntity<RecurringTransaction[]> response = restTemplate.getForEntity(url, RecurringTransaction[].class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -144,6 +153,8 @@ class RecurringTransactionControllerTest {
     @Test
     @Order(7)
     void findAll() {
+        create();
+
         String url = getBaseUrl() + "/findAll";
         ResponseEntity<RecurringTransaction[]> response = restTemplate.getForEntity(url, RecurringTransaction[].class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -155,6 +166,5 @@ class RecurringTransactionControllerTest {
         boolean found = Arrays.stream(all)
                 .anyMatch(rt -> rt.getRecurringTransactionId().equals(recurringTransaction.getRecurringTransactionId()));
         assertTrue(found);
-
     }
 }

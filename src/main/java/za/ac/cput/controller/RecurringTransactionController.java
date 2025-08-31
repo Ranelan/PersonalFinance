@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/recurring-transaction")
+@RequestMapping("/api/recurringTransactions")
 public class RecurringTransactionController {
 
     private final RecurringTransactionService recurringTransactionService;
