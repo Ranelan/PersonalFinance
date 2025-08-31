@@ -14,7 +14,7 @@ public interface IAdminService extends IService<Admin, Long> {
     List<Admin> findByEmail(String email);
     List<Admin> findAll();
 
-    Admin logIn(String usernameOrEmail, String password);
+    Admin logIn(String email, String password);
 
     //Regular USer
     List<RegularUser> viewAllRegularUsers();

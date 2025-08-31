@@ -8,7 +8,7 @@ import za.ac.cput.domain.RegularUser;
 import za.ac.cput.service.IRegularUserService;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/regularUser")
 public class RegularUserController {
