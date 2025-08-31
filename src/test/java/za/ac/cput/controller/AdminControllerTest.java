@@ -1,4 +1,3 @@
-
 package za.ac.cput.controller;
 
 import org.junit.jupiter.api.*;
@@ -120,6 +119,49 @@ public class AdminControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
+    @Test
+    @Order(8)
+    void testFindByEmail() {
+        ResponseEntity<Admin[]> response = restTemplate.getForEntity(getBaseUrl() + "/findByEmail/" + admin.getEmail(), Admin[].class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
     }
 
+    @Test
+    @Order(9)
+    void testFindAll() {
+        ResponseEntity<Admin[]> response = restTemplate.getForEntity(getBaseUrl() + "/findAll", Admin[].class);
+        assertTrue(response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NOT_FOUND);
+    }
 
+    @Test
+    @Order(10)
+    void testViewAllRegularUsers() {
+        ResponseEntity<Object[]> response = restTemplate.getForEntity(getBaseUrl() + "/regular-users", Object[].class);
+        assertTrue(response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @Order(11)
+    void testViewAnonymizedAnalytics() {
+        ResponseEntity<Void> response = restTemplate.getForEntity(getBaseUrl() + "/analytics", Void.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    // Category management tests (short)
+    @Test
+    @Order(12)
+    void testCreateCategory() {
+        String url = getBaseUrl() + "/categories/create?name=TestCategory&type=Expense";
+        ResponseEntity<Object> response = restTemplate.postForEntity(url, null, Object.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    @Order(13)
+    void testViewAllCategories() {
+        ResponseEntity<Object[]> response = restTemplate.getForEntity(getBaseUrl() + "/categories/all", Object[].class);
+        assertTrue(response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.NOT_FOUND);
+    }
+
+    }

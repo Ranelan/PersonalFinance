@@ -87,13 +87,13 @@ public class AdminController {
         return (!users.isEmpty()) ? ResponseEntity.ok(users) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/regular-users/{id}")
+    @DeleteMapping("/regular-users/delete/{id}")
     public ResponseEntity<Void> deleteRegularUserById(@PathVariable Long id) {
         adminService.deleteRegularUserById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/regular-users/{id}")
+    @PutMapping("/regular-users/update/{id}")
     public ResponseEntity<RegularUser> updateRegularUserById(
             @PathVariable Long id, @RequestBody RegularUser updatedUser) {
         try {

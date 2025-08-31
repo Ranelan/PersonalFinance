@@ -62,35 +62,35 @@ public class BudgetController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/findByMonth/{month}")
-    public ResponseEntity<List<Budget>> findByMonth(@PathVariable String month) {
-        List<Budget> budgets = budgetService.findByMonth(month);
-        if (budgets != null && !budgets.isEmpty()) {
-            return ResponseEntity.ok(budgets);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/findByLimitAmountGreaterThan/{amount}")
-    public ResponseEntity<List<Budget>> findByLimitAmountGreaterThan(@PathVariable double amount) {
-        List<Budget> budgets = budgetService.findByLimitAmountGreaterThan(amount);
-        if (budgets != null && !budgets.isEmpty()) {
-            return ResponseEntity.ok(budgets);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/findByYear/{year}")
-    public ResponseEntity<List<Budget>> findByYear(@PathVariable String year) {
-        List<Budget> budgets = budgetService.findByYear(year);
-        if (budgets != null && !budgets.isEmpty()) {
-            return ResponseEntity.ok(budgets);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @GetMapping("/findByMonth/{month}")
+//    public ResponseEntity<List<Budget>> findByMonth(@PathVariable String month) {
+//        List<Budget> budgets = budgetService.findByMonth(month);
+//        if (budgets != null && !budgets.isEmpty()) {
+//            return ResponseEntity.ok(budgets);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+//
+//    @GetMapping("/findByLimitAmountGreaterThan/{amount}")
+//    public ResponseEntity<List<Budget>> findByLimitAmountGreaterThan(@PathVariable double amount) {
+//        List<Budget> budgets = budgetService.findByLimitAmountGreaterThan(amount);
+//        if (budgets != null && !budgets.isEmpty()) {
+//            return ResponseEntity.ok(budgets);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+//
+//    @GetMapping("/findByYear/{year}")
+//    public ResponseEntity<List<Budget>> findByYear(@PathVariable String year) {
+//        List<Budget> budgets = budgetService.findByYear(year);
+//        if (budgets != null && !budgets.isEmpty()) {
+//            return ResponseEntity.ok(budgets);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @GetMapping("/findAll")
     public ResponseEntity<List<Budget>> findAll() {
