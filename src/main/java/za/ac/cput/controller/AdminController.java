@@ -10,7 +10,7 @@ import za.ac.cput.service.AdminService;
 
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -23,7 +23,7 @@ public class AdminController {
     }
 
     public static class LoginRequest {
-        public String usernameOrEmail;
+        public String email;
         public String password;
     }
 
@@ -75,7 +75,7 @@ public class AdminController {
     // Admin Login (JSON Body)
     @PostMapping("/login")
     public ResponseEntity<Admin> logIn(@RequestBody LoginRequest request) {
-        Admin admin = adminService.logIn(request.usernameOrEmail, request.password);
+        Admin admin = adminService.logIn(request.email, request.password);
         return (admin != null) ? ResponseEntity.ok(admin) : ResponseEntity.status(401).build();
     }
 

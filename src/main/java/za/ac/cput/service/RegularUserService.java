@@ -60,11 +60,11 @@ public class RegularUserService implements IRegularUserService{
     }
 
     @Override
-    public RegularUser logIn(String usernameOrEmail, String password) {
-        List<RegularUser> foundRegularUser = regularUserRepository.findByUserName(usernameOrEmail);
+    public RegularUser logIn(String email, String password) {
+        List<RegularUser> foundRegularUser = regularUserRepository.findByEmail(email);
         if (foundRegularUser.isEmpty()) {
-            // Try to find by email if not found by username
-            foundRegularUser = regularUserRepository.findByEmail(usernameOrEmail);
+            // Try to find by password if not found by email
+            foundRegularUser = regularUserRepository.findByPassword(password);
         }
 
         if (!foundRegularUser.isEmpty()) {

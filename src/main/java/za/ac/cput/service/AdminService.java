@@ -49,11 +49,11 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Admin logIn(String usernameOrEmail, String password) {
-        List<Admin> foundAdmins = adminRepository.findByUserName(usernameOrEmail);
+    public Admin logIn(String email, String password) {
+        List<Admin> foundAdmins = adminRepository.findByEmail(email);
         if (foundAdmins.isEmpty()) {
             // Try to find by email if not found by username
-            foundAdmins = adminRepository.findByEmail(usernameOrEmail);
+            foundAdmins = adminRepository.findByPassword(password);
         }
 
         if (!foundAdmins.isEmpty()) {
