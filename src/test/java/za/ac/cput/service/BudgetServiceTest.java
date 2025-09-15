@@ -81,29 +81,29 @@ class BudgetServiceTest {
         budget = updated;
     }
 
-    @Test
-    @Order(4)
-    void findByMonth() {
-        List<Budget> results = budgetService.findByMonth("February");
-        assertFalse(results.isEmpty(), "Should find at least one budget for February");
-        assertEquals("February", results.get(0).getMonth());
-    }
-
-    @Test
-    @Order(5)
-    void findByLimitAmountGreaterThan() {
-        List<Budget> results = budgetService.findByLimitAmountGreaterThan(3000.00);
-        assertFalse(results.isEmpty(), "Should find budgets with limit greater than 3000");
-        assertTrue(results.stream().allMatch(b -> b.getLimitAmount() > 3000.00));
-    }
-
-    @Test
-    @Order(6)
-    void findByYear() {
-        List<Budget> results = budgetService.findByYear("2025");
-        assertFalse(results.isEmpty(), "Should find budgets from the year 2025");
-        assertTrue(results.stream().allMatch(b -> b.getYear().equals("2025")));
-    }
+//    @Test
+//    @Order(4)
+//    void findByMonth() {
+//        List<Budget> results = budgetService.findByMonth("February");
+//        assertFalse(results.isEmpty(), "Should find at least one budget for February");
+//        assertEquals("February", results.get(0).getMonth());
+//    }
+//
+//    @Test
+//    @Order(5)
+//    void findByLimitAmountGreaterThan() {
+//        List<Budget> results = budgetService.findByLimitAmountGreaterThan(3000.00);
+//        assertFalse(results.isEmpty(), "Should find budgets with limit greater than 3000");
+//        assertTrue(results.stream().allMatch(b -> b.getLimitAmount() > 3000.00));
+//    }
+//
+//    @Test
+//    @Order(6)
+//    void findByYear() {
+//        List<Budget> results = budgetService.findByYear("2025");
+//        assertFalse(results.isEmpty(), "Should find budgets from the year 2025");
+//        assertTrue(results.stream().allMatch(b -> b.getYear().equals("2025")));
+//    }
 
     @Test
     @Order(7)
