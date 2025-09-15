@@ -7,6 +7,7 @@
 
 package za.ac.cput.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class Category {
     private String type;
 
     @OneToOne(mappedBy = "category")
+    @JsonBackReference
     private Transaction transaction;
 
     public Category() {}

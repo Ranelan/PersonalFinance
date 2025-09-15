@@ -17,6 +17,8 @@ public class CategoryService implements ICategoryService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+
+
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -36,22 +38,40 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public Category update(Category category) {
-        if(category.getCategoryId() != null && categoryRepository.existsById(category.getCategoryId())) {
+        if (category.getCategoryId() != null && categoryRepository.existsById(category.getCategoryId())) {
             Transaction transaction = category.getTransaction();
-            if(transaction != null && (transaction.getTransactionId() == null)) {
+            if (transaction != null && (transaction.getTransactionId() == null)) {
                 throw new IllegalStateException("Cannot save category with transient transaction entity (null id). Save transaction first.");
             }
-            return categoryRepository.save(category);
+            Category existing = categoryRepository.findById(category.getCategoryId()).orElse(null);
+            if (existing != null) {
+                Category updated = new Category.CategoryBuilder()
+                    .copy(existing)
+                    .setName(category.getName())
+                    .setType(category.getType())
+                    .setTransaction(transaction)
+                    .build();
+                return categoryRepository.save(updated);
+            }
         }
         return null;
     }
 
 
     @Override
-    public void delete(Long aLong) {
-        if(categoryRepository.existsById(aLong)) {
-            categoryRepository.deleteById(aLong);
+    public void delete(Long categoryId) {
+        // Find all transactions referencing this category
+        List<Transaction> transactions = transactionRepository.findAll();
+        for (Transaction transaction : transactions) {
+            if (transaction.getCategory() != null && transaction.getCategory().getCategoryId().equals(categoryId)) {
+                Transaction updatedTransaction = new Transaction.TransactionBuilder()
+                    .copy(transaction)
+                    .setCategory(null)
+                    .build();
+                transactionRepository.save(updatedTransaction);
+            }
         }
+        categoryRepository.deleteById(categoryId);
     }
 
     @Override
