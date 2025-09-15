@@ -6,6 +6,7 @@
 
 package za.ac.cput.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -27,6 +28,7 @@ public class Transaction {
 
     @OneToOne
     @JoinColumn(name = "category_id")
+    @JsonManagedReference
     private Category category;
 
     public Transaction() {
