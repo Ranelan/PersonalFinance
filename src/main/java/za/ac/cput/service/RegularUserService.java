@@ -1,25 +1,30 @@
 package za.ac.cput.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import za.ac.cput.domain.Admin;
 import za.ac.cput.domain.RegularUser;
 import za.ac.cput.repository.RegularUserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RegularUserService implements IRegularUserService{
 
     private final RegularUserRepository regularUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegularUserService(RegularUserRepository regularUserRepository) {
+    public RegularUserService(RegularUserRepository regularUserRepository, PasswordEncoder passwordEncoder) {
         this.regularUserRepository = regularUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public RegularUser create(RegularUser regularUser){
+        // Hash the password before saving
+        regularUser.setPassword(passwordEncoder.encode(regularUser.getPassword()));
         return regularUserRepository.save(regularUser);
     }
 
@@ -33,6 +38,8 @@ public class RegularUserService implements IRegularUserService{
         if (regularUser.getUserID() != null
                 && regularUserRepository.existsById(regularUser.getUserID())
         ) {
+            // Hash the password before saving (if not already hashed)
+            regularUser.setPassword(passwordEncoder.encode(regularUser.getPassword()));
             return regularUserRepository.save(regularUser);
         } else {
             return null;
@@ -50,7 +57,7 @@ public class RegularUserService implements IRegularUserService{
     }
 
     @Override
-    public List<RegularUser> findByEmail(String email) {
+    public Optional<RegularUser> findByEmail(String email) {
         return regularUserRepository.findByEmail(email);
     }
 
@@ -61,19 +68,13 @@ public class RegularUserService implements IRegularUserService{
 
     @Override
     public RegularUser logIn(String email, String password) {
-        List<RegularUser> foundRegularUser = regularUserRepository.findByEmail(email);
-        if (foundRegularUser.isEmpty()) {
-            // Try to find by password if not found by email
-            foundRegularUser = regularUserRepository.findByPassword(password);
-        }
-
-        if (!foundRegularUser.isEmpty()) {
-            RegularUser regularUser = foundRegularUser.get(0);
-            if (regularUser.getPassword().equals(password)) {
+        Optional<RegularUser> foundRegularUser = regularUserRepository.findByEmail(email);
+        if (foundRegularUser.isPresent()) {
+            RegularUser regularUser = foundRegularUser.get();
+            if (passwordEncoder.matches(password, regularUser.getPassword())) {
                 return regularUser; // Login successful
             }
         }
-
         return null;
     }
     }

@@ -11,13 +11,14 @@ import org.springframework.stereotype.Repository;
 import za.ac.cput.domain.RegularUser;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RegularUserRepository extends JpaRepository<RegularUser, Long> {
 
     List<RegularUser> findByMembershipID(String membershipID);
     List<RegularUser> findByUserName(String userName);
-    List<RegularUser> findByEmail(String email);
+    Optional<RegularUser> findByEmail(String email);
     List<RegularUser> findByPassword(String password);
 
 
