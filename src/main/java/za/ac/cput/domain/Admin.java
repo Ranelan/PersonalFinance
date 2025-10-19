@@ -7,6 +7,8 @@
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
 
@@ -43,9 +45,17 @@ public class Admin extends User {
         return adminCode;
     }
 
+    public String getEmail() {
+        return super.getEmail();
+    }
+
 
     public List<Permission> getPermissions() {
         return permissions;
+    }
+
+    public List<GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
     @Override
