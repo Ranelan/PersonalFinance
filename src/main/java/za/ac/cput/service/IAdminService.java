@@ -6,12 +6,13 @@ import za.ac.cput.domain.RegularUser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 public interface IAdminService extends IService<Admin, Long> {
     Admin read(Long id);
     List<Admin> findByUserName(String userName);
-    List<Admin> findByEmail(String email);
+    Optional<Admin> findByEmail(String email);
     List<Admin> findAll();
 
     Admin logIn(String email, String password);
