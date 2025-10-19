@@ -5,143 +5,176 @@
 */
 
 package za.ac.cput.domain;
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import java.time.LocalDate;
+const API_BASE = "http://localhost:8081/api/transaction";
 
-@Entity
-public class Transaction {
+function TransactionPage() {
+  const [transactions, setTransactions] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    amount: "",
+    description: "",
+    categoryId: "",
+    type: "Expense",
+    date: new Date().toISOString().split("T")[0],
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transactionId;
+  useEffect(() => {
+    fetchTransactions();
+    fetchCategories();
+  }, []);
 
-    private double amount;
-    private LocalDate date;
-    private String description;
-    private String type;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private RegularUser regularUser;
-
-    @OneToOne
-    @JoinColumn(name = "category_id")
-    @JsonManagedReference
-    private Category category;
-
-    public Transaction() {
+  const fetchTransactions = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE}/findAll`);
+      if (response.ok) {
+        const data = await response.json();
+        setTransactions(data);
+      } else {
+        setError("Failed to fetch transactions");
+      }
+    } catch (err) {
+      setError("Failed to fetch transactions");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    public Transaction(Long transactionId, double amount, LocalDate date,
-                       String description, String type,
-                       RegularUser regularUser, Category category) {
-        this.transactionId = transactionId;
-        this.amount = amount;
-        this.date = date;
-        this.description = description;
-        this.type = type;
-        this.regularUser = regularUser;
-        this.category = category;
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("http://localhost:8081/api/category/findAll");
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch categories");
     }
+  };
 
-    public Transaction(TransactionBuilder builder) {
-        this.transactionId = builder.transactionId;
-        this.amount = builder.amount;
-        this.date = builder.date;
-        this.description = builder.description;
-        this.type = builder.type;
-        this.regularUser = builder.regularUser;
-        this.category = builder.category;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API_BASE}/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        setShowForm(false);
+        setFormData({
+          amount: "",
+          description: "",
+          categoryId: "",
+          type: "Expense",
+          date: new Date().toISOString().split("T")[0],
+        });
+        fetchTransactions();
+      } else {
+        setError("Failed to create transaction");
+      }
+    } catch (err) {
+      setError("Error creating transaction");
     }
+  };
 
-    public Long getTransactionId() {
-        return transactionId;
-    }
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
 
-    public double getAmount() {
-        return amount;
-    }
+  const formatAmount = (amount, type) =>
+    type === "Income" ? `R ${amount}` : `-R ${amount}`;
 
-    public LocalDate getDate() {
-        return date;
-    }
+  const getCategoryName = (categoryId) => {
+    const category = categories.find((cat) => cat.categoryId === categoryId);
+    return category ? category.name : "Uncategorized";
+  };
 
-    public String getDescription() {
-        return description;
-    }
+  return (
+    <div className="transaction-page">
+      <div className="transaction-header">
+        <h1>💳 Transactions</h1>
+        <button className="btn-add" onClick={() => setShowForm(true)}>+ Add Transaction</button>
+      </div>
 
-    public String getType() {
-        return type;
-    }
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="transaction-form">
+            <h2>Add New Transaction</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-row">
+                <input
+                  type="number"
+                  name="amount"
+                  placeholder="Amount"
+                  value={formData.amount}
+                  onChange={handleInputChange}
+                  required
+                />
+                <select name="type" value={formData.type} onChange={handleInputChange}>
+                  <option value="Expense">Expense</option>
+                  <option value="Income">Income</option>
+                </select>
+              </div>
+              <input
+                type="text"
+                name="description"
+                placeholder="Description"
+                value={formData.description}
+                onChange={handleInputChange}
+                required
+              />
+              <select name="categoryId" value={formData.categoryId} onChange={handleInputChange} required>
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.categoryId} value={cat.categoryId}>{cat.name}</option>
+                ))}
+              </select>
+              <input type="date" name="date" value={formData.date} onChange={handleInputChange} required />
+              <div className="form-actions">
+                <button type="button" className="btn-cancel" onClick={() => setShowForm(false)}>Cancel</button>
+                <button type="submit" className="btn-submit">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
-    public RegularUser getRegularUser() {
-        return regularUser;
-    }
+      {loading && <div className="loading">Loading...</div>}
+      {error && <div className="error">{error}</div>}
 
-    public Category getCategory() {
-        return category;
-    }
+      <div className="transaction-list">
+        {transactions.length === 0 && !loading && !error ? (
+          <div className="no-transactions">No transactions yet.</div>
+        ) : (
+          transactions.map((t) => (
+            <div key={t.id} className={`transaction-card ${t.type.toLowerCase()}`}>
+              <div className="transaction-left">
+                <div className="transaction-desc">{t.description}</div>
+                <div className="transaction-category">{getCategoryName(t.categoryId)}</div>
+              </div>
+              <div className="transaction-right">
+                <div className="transaction-date">{formatDate(t.date)}</div>
+                <div className={`transaction-amount ${t.type.toLowerCase()}`}>{formatAmount(t.amount, t.type)}</div>
 
 
-    public static class TransactionBuilder {
-        private Long transactionId;
-        private double amount;
-        private LocalDate date;
-        private String description;
-        private String type;
-        private RegularUser regularUser;
-        private Category category;
-
-        public TransactionBuilder setTransactionId(Long transactionId) {
-            this.transactionId = transactionId;
-            return this;
-        }
-
-        public TransactionBuilder setAmount(double amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public TransactionBuilder setDate(LocalDate date) {
-            this.date = date;
-            return this;
-        }
-
-        public TransactionBuilder setDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public TransactionBuilder setType(String type) {
-            this.type = type;
-            return this;
-        }
-
-        public TransactionBuilder setRegularUser(RegularUser regularUser) {
-            this.regularUser = regularUser;
-            return this;
-        }
-
-        public TransactionBuilder setCategory(Category category) {
-            this.category = category;
-            return this;
-        }
-
-        public TransactionBuilder copy(Transaction transaction) {
-            this.transactionId = transaction.transactionId;
-            this.amount = transaction.amount;
-            this.date = transaction.date;
-            this.description = transaction.description;
-            this.type = transaction.type;
-            this.regularUser = transaction.regularUser;
-            this.category = transaction.category;
-            return this;
-        }
-
-        public Transaction build() {
-            return new Transaction(this);
-        }
-    }
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 }
+
+export default TransactionPage;
