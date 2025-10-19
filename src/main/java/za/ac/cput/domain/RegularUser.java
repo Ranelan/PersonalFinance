@@ -7,6 +7,9 @@
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.List;
 
 @Entity
@@ -125,5 +128,9 @@ public class RegularUser extends User {
         public RegularUser build() {
             return new RegularUser(this);
         }
+    }
+
+    public List<GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }

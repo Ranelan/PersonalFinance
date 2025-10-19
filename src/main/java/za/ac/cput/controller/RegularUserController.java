@@ -3,11 +3,12 @@ package za.ac.cput.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.ac.cput.domain.Admin;
 import za.ac.cput.domain.RegularUser;
 import za.ac.cput.service.IRegularUserService;
 
 import java.util.List;
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/regularUser")
@@ -37,7 +38,8 @@ public class RegularUserController {
 
     @PostMapping("/login")
     public ResponseEntity<RegularUser> logIn(@RequestBody RegularUserController.LoginRequest request) {
-        RegularUser regularUser= regularUserService.logIn(request.usernameOrEmail, request.password);
+        // Only support login by email for now
+        RegularUser regularUser = regularUserService.logIn(request.usernameOrEmail, request.password);
         return (regularUser != null) ? ResponseEntity.ok(regularUser) : ResponseEntity.status(401).build();
     }
 
@@ -78,13 +80,9 @@ public class RegularUserController {
     }
 
     @GetMapping("/findByEmail/{email}")
-    public ResponseEntity<List<RegularUser>> findByEmail(@PathVariable String email) {
-        List<RegularUser> users = regularUserService.findByEmail(email);
-        if (users != null && !users.isEmpty()) {
-            return ResponseEntity.ok(users);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<RegularUser> findByEmail(@PathVariable String email) {
+        Optional<RegularUser> user = regularUserService.findByEmail(email);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/findAll")
