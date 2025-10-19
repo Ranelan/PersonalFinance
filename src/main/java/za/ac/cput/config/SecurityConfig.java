@@ -19,15 +19,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())// Disable Spring security that is set to default
+                .csrf(csrf ->
+                        csrf.disable())// Disable Spring security that is set to default
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/").permitAll()
-                        .requestMatchers("/api/regularUser/").permitAll()
-                        .requestMatchers("/api/budget/").permitAll()
-                        .requestMatchers("/api/transactions/").permitAll()
-                        .requestMatchers("//api/recurringTransactions/").permitAll()
-                        .requestMatchers("/api/category/").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers("/api/regularUser/**").permitAll()
+                        .requestMatchers("/api/budget/**").permitAll()
+                        .requestMatchers("/api/transactions/**").permitAll()
+                        .requestMatchers("/api/recurringTransactions/**").permitAll()
+                        .requestMatchers("/api/category/**").permitAll()
+                        .anyRequest()
+                        .authenticated()
 
                 )//close of authorizeHttpRequests
                 .sessionManagement(session -> session
@@ -43,7 +45,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

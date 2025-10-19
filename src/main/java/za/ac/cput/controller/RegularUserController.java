@@ -22,7 +22,7 @@ public class RegularUserController {
     }
 
     public static class LoginRequest {
-        public String usernameOrEmail;
+        public String email;
         public String password;
     }
 
@@ -38,8 +38,7 @@ public class RegularUserController {
 
     @PostMapping("/login")
     public ResponseEntity<RegularUser> logIn(@RequestBody RegularUserController.LoginRequest request) {
-        // Only support login by email for now
-        RegularUser regularUser = regularUserService.logIn(request.usernameOrEmail, request.password);
+        RegularUser regularUser = regularUserService.logIn(request.email, request.password);
         return (regularUser != null) ? ResponseEntity.ok(regularUser) : ResponseEntity.status(401).build();
     }
 
