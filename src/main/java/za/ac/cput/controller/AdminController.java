@@ -10,6 +10,7 @@ import za.ac.cput.service.AdminService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
@@ -60,9 +61,9 @@ public class AdminController {
     }
 
     @GetMapping("/findByEmail/{email}")
-    public ResponseEntity<List<Admin>> findByEmail(@PathVariable String email) {
-        List<Admin> admins = adminService.findByEmail(email);
-        return (!admins.isEmpty()) ? ResponseEntity.ok(admins) : ResponseEntity.notFound().build();
+    public ResponseEntity<Admin> findByEmail(@PathVariable String email) {
+        Optional<Admin> admin = adminService.findByEmail(email);
+        return admin.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/findAll")
@@ -136,7 +137,7 @@ public class AdminController {
 
     @GetMapping("/categories/all")
     public ResponseEntity<List<Category>> viewAllCategories() {
-        List<Category> categories = adminService.viewAllCategories();
+        List<Category> categories = (List<Category>) adminService.viewAllCategories();
         return (!categories.isEmpty()) ? ResponseEntity.ok(categories) : ResponseEntity.notFound().build();
     }
 

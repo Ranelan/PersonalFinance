@@ -12,15 +12,14 @@ import za.ac.cput.domain.Admin;
 import za.ac.cput.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 
-    List<Admin> findByAdminCode(String adminCode);
+    //List<Admin> findByAdminCode(String adminCode);
     List<Admin> findByUserName(String userName);
-    List<Admin> findByEmail(String email);
-    List<Admin> findByPassword(String password);
-
-
+    Optional<Admin> findByEmail(String email);
+   // List<Admin> findByPassword(String password);
 
 }

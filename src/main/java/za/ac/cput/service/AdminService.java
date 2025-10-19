@@ -1,6 +1,7 @@
 package za.ac.cput.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import za.ac.cput.domain.*;
 import za.ac.cput.repository.AdminRepository;
@@ -9,10 +10,7 @@ import za.ac.cput.repository.RegularUserRepository;
 import za.ac.cput.repository.TransactionRepository;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,25 +20,29 @@ public class AdminService implements IAdminService {
     private final RegularUserRepository regularUserRepository;
     private final CategoryRepository categoryRepository;
     private final TransactionRepository transactionRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AdminService(AdminRepository adminRepository, RegularUserRepository regularUserRepository,
-                        CategoryRepository categoryRepository, TransactionRepository transactionRepository) {
+                        CategoryRepository categoryRepository, TransactionRepository transactionRepository,
+                        PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
         this.regularUserRepository = regularUserRepository;
         this.categoryRepository = categoryRepository;
         this.transactionRepository = transactionRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Admin create(Admin admin) {
         // Grant all permissions to every admin by default
         List<Permission> allPermissions = Arrays.asList(Permission.values());
-
+        // Hash the password before saving
+        String hashedPassword = passwordEncoder.encode(admin.getPassword());
         Admin newAdmin = new Admin.AdminBuilder()
                 .setUserName(admin.getUserName())
                 .setEmail(admin.getEmail())
-                .setPassword(admin.getPassword())
+                .setPassword(hashedPassword)
                 .setAdminCode(admin.getAdminCode())
                 .setPermissions(allPermissions)
                 .build();
@@ -50,19 +52,13 @@ public class AdminService implements IAdminService {
 
     @Override
     public Admin logIn(String email, String password) {
-        List<Admin> foundAdmins = adminRepository.findByEmail(email);
-        if (foundAdmins.isEmpty()) {
-            // Try to find by email if not found by username
-            foundAdmins = adminRepository.findByPassword(password);
-        }
-
-        if (!foundAdmins.isEmpty()) {
-            Admin admin = foundAdmins.get(0);
-            if (admin.getPassword().equals(password)) {
+        Optional<Admin> foundAdmin = adminRepository.findByEmail(email);
+        if (foundAdmin.isPresent()) {
+            Admin admin = foundAdmin.get();
+            if (passwordEncoder.matches(password, admin.getPassword())) {
                 return admin; // Login successful
             }
         }
-
         return null;
     }
 
@@ -76,12 +72,14 @@ public class AdminService implements IAdminService {
         return adminRepository.findById(admin.getUserID())
                 .map(existingAdmin -> {
                     // Keep existing permissions intact
+                    String hashedPassword = passwordEncoder.encode(admin.getPassword());
                     Admin updatedAdmin = new Admin.AdminBuilder()
                             .copy(existingAdmin)
                             .setUserName(admin.getUserName())
                             .setEmail(admin.getEmail())
-                            .setPassword(admin.getPassword())
+                            .setPassword(hashedPassword)
                             .setAdminCode(admin.getAdminCode())
+                            .setPermissions(existingAdmin.getPermissions())
                             .build();
 
                     return adminRepository.save(updatedAdmin);
@@ -100,7 +98,7 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public List<Admin> findByEmail(String email) {
+    public Optional<Admin> findByEmail(String email) {
         return adminRepository.findByEmail(email);
     }
 
