@@ -58,4 +58,14 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.findAll();
         return ResponseEntity.ok(transactions);
     }
+
+    @GetMapping("/byUser/{userId}")
+    public ResponseEntity<List<Transaction>> getByUser(@PathVariable Long userId) {
+        List<Transaction> transactions = transactionService.findByUserId(userId);
+        if (transactions != null && !transactions.isEmpty()) {
+            return ResponseEntity.ok(transactions);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

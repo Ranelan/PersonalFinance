@@ -14,4 +14,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByAmountGreaterThan(double amount);
 
     List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<Transaction> findByRegularUser_UserID(Long userId);
 }

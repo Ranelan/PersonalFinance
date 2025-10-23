@@ -73,6 +73,10 @@ public class TransactionService implements ITransactionService {
         return transactionRepository.findByDateBetween(startDate, endDate);
     }
 
+    @Override
+    public List<Transaction> findByUserId(Long userId) {
+        return transactionRepository.findByRegularUser_UserID(userId);
+    }
 
 
     @Override

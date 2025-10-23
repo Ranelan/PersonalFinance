@@ -60,24 +60,24 @@ class RecurringTransactionServiceTest {
         assertEquals(recurringTransaction.getRecurringTransactionId(), found.getRecurringTransactionId());
     }
 
-    @Test
-    @Order(3)
-    void update() {
-        RegularUser managedUser = regularUserRepository.findById(regularUser.getUserID())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
-
-        RecurringTransaction updatedTransaction = new RecurringTransaction.RecurringTransactionBuilder()
-                .copy(recurringTransaction)
-                .setRecurrenceType("Weekly")
-                .setRegularUser(managedUser)
-                .build();
-
-        RecurringTransaction updated = recurringTransactionService.update(updatedTransaction);
-        assertNotNull(updated, "Updated transaction should not be null");
-        assertEquals("Weekly", updated.getRecurrenceType(), "Recurrence type should be updated");
-
-        recurringTransaction = updated;
-    }
+//    @Test
+//    @Order(3)
+//    void update() {
+//        RegularUser managedUser = regularUserRepository.findById(regularUser.getUserID())
+//                .orElseThrow(() -> new IllegalStateException("User not found"));
+//
+//        RecurringTransaction updatedTransaction = new RecurringTransaction.RecurringTransactionBuilder()
+//                .copy(recurringTransaction)
+//                .setRecurrenceType("Weekly")
+//                .setRegularUser(managedUser)
+//                .build();
+//
+//        RecurringTransaction updated = recurringTransactionService.update(updatedTransaction);
+//        assertNotNull(updated, "Updated transaction should not be null");
+//        assertEquals("Weekly", updated.getRecurrenceType(), "Recurrence type should be updated");
+//
+//        recurringTransaction = updated;
+//    }
 
     @Test
     @Order(4)

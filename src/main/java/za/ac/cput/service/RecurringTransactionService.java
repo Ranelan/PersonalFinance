@@ -2,6 +2,7 @@ package za.ac.cput.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.ac.cput.domain.Category;
 import za.ac.cput.domain.Goal;
 import za.ac.cput.domain.RecurringTransaction;
 import za.ac.cput.domain.RegularUser;
@@ -49,6 +50,14 @@ public class RecurringTransactionService implements IRecurringTransactionService
         return recurringTransactionRepository.findByRecurrenceType(recurrenceType);
     }
 
+    public List<RecurringTransaction> findByCategory(Category category) {
+        return recurringTransactionRepository.findByCategory(category);
+    }
+
+    public List<RecurringTransaction> findByRegularUser(RegularUser regularUser) {
+        return recurringTransactionRepository.findByRegularUser(regularUser);
+    }
+
     @Override
     public List<RecurringTransaction> findByNextExecution(LocalDate nextExecution) {
         return recurringTransactionRepository.findByNextExecution(nextExecution);
@@ -57,5 +66,10 @@ public class RecurringTransactionService implements IRecurringTransactionService
     @Override
     public List<RecurringTransaction> findAll() {
         return  recurringTransactionRepository.findAll();
+    }
+
+    @Override
+    public List<RecurringTransaction> findByUserId(Long userId) {
+        return recurringTransactionRepository.findByRegularUser_UserID(userId);
     }
 }

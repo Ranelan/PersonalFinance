@@ -25,6 +25,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/api/regularUser/**").permitAll()
                         .requestMatchers("/api/budget/**").permitAll()
+                        .requestMatchers("/api/goal/**").permitAll()
                         .requestMatchers("/api/transactions/**").permitAll()
                         .requestMatchers("/api/recurringTransactions/**").permitAll()
                         .requestMatchers("/api/category/**").permitAll()
