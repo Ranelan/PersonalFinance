@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.Category;
 import za.ac.cput.domain.RegularUser;
 import za.ac.cput.domain.Transaction;
+import za.ac.cput.factory.CategoryFactory;
 import za.ac.cput.factory.RegularUserFactory;
 import za.ac.cput.repository.RegularUserRepository;
 import za.ac.cput.repository.TransactionRepository;
@@ -43,10 +44,11 @@ class CategoryServiceTest {
             regularUser = regularUserRepository.save(regularUser);
 
             // Save Category through service, assign to field (not local var)
-            category = new Category.CategoryBuilder()
-                    .setName("Example")
-                    .setType("Expense")
-                    .build();
+            category = CategoryFactory.createCategory(
+                    "Example",
+                    "Expense",
+                    null, // Transaction will be set after creation
+                    regularUser);
             category = categoryService.create(category);
 
             // Create and save Transaction referencing Category
@@ -72,17 +74,18 @@ class CategoryServiceTest {
     @Test
     @Order(1)
     void create() {
-        Category newCategory = new Category.CategoryBuilder()
-                .setName("New Category")
-                .setType("Income")
-                .setTransaction(transaction)
-                .build();
+        Category newCategory = CategoryFactory.createCategory(
+                "New Category",
+                "Income",
+                transaction,
+                regularUser);
 
         Category createdCategory = categoryService.create(newCategory);
         assertNotNull(createdCategory, "Created category should not be null");
         assertNotNull(createdCategory.getCategoryId(), "Category ID should be generated after creation");
         assertEquals("New Category", createdCategory.getName());
         assertEquals("Income", createdCategory.getType());
+        assertEquals(regularUser.getUserID(), createdCategory.getRegularUser().getUserID());
     }
 
     @Test

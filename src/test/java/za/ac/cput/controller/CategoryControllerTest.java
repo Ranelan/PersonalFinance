@@ -7,10 +7,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import za.ac.cput.domain.Category;
+import za.ac.cput.domain.RegularUser;
 import za.ac.cput.domain.Transaction;
 import za.ac.cput.factory.CategoryFactory;
+import za.ac.cput.factory.RegularUserFactory;
 import za.ac.cput.factory.TransactionFactory;
 import za.ac.cput.repository.CategoryRepository;
+import za.ac.cput.repository.RegularUserRepository;
 import za.ac.cput.repository.TransactionRepository;
 
 import java.time.LocalDate;
@@ -24,12 +27,16 @@ class CategoryControllerTest {
 
     private Category category;
     private Transaction transaction;
+    private RegularUser regularUser;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private RegularUserRepository regularUserRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -43,6 +50,12 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setUp() {
+        regularUser = RegularUserFactory.createRegularUser(
+            "testuser",
+            "testuser@example.com",
+            "password123"
+        );
+        regularUser = regularUserRepository.save(regularUser);
         transaction = TransactionFactory.createTransaction(
                 250.00,
                 LocalDate.of(2025, 8, 10),
@@ -50,7 +63,7 @@ class CategoryControllerTest {
                 "Groceries"
         );
         transaction = transactionRepository.save(transaction);
-        category = CategoryFactory.createCategory("Food", "Grocery purchase", transaction);
+        category = CategoryFactory.createCategory("Food", "Grocery purchase", transaction, regularUser);
         assertNotNull(category);
     }
 
@@ -145,5 +158,18 @@ class CategoryControllerTest {
         String readUrl = getBaseUrl() + "/read/" + category.getCategoryId();
         ResponseEntity<Category> response = restTemplate.getForEntity(readUrl, Category.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(8)
+    void findByUserId() {
+        String url = getBaseUrl() + "/byUser/" + regularUser.getUserID();
+        ResponseEntity<Category[]> response = restTemplate.getForEntity(url, Category[].class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().length > 0);
+        for (Category c : response.getBody()) {
+            assertEquals(regularUser.getUserID(), c.getRegularUser().getUserID());
+        }
     }
 }

@@ -7,6 +7,7 @@ package za.ac.cput.factory;
 
 import za.ac.cput.domain.Category;
 import za.ac.cput.domain.Transaction;
+import za.ac.cput.domain.RegularUser;
 import za.ac.cput.util.Helper;
 
 public class CategoryFactory {
@@ -19,6 +20,19 @@ public class CategoryFactory {
                 .setName(name)
                 .setType(type)
                 .setTransaction(transaction)
+                .build();
+    }
+
+    public static Category createCategory(String name, String type, Transaction transaction, RegularUser regularUser) {
+        if (Helper.isNullOrEmpty(name) || Helper.isNullOrEmpty(type) || transaction == null || regularUser == null) {
+            return null;
+        }
+
+        return new Category.CategoryBuilder()
+                .setName(name)
+                .setType(type)
+                .setTransaction(transaction)
+                .setRegularUser(regularUser)
                 .build();
     }
 }

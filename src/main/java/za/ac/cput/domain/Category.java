@@ -26,13 +26,18 @@ public class Category {
     @JsonBackReference
     private Transaction transaction;
 
+    @ManyToOne
+    @JoinColumn(name = "regular_user_id")
+    private RegularUser regularUser;
+
     public Category() {}
 
-    public Category(Long categoryId, String name, String type, Transaction transaction) {
+    public Category(Long categoryId, String name, String type, Transaction transaction, RegularUser regularUser) {
         this.categoryId = categoryId;
         this.name = name;
         this.type = type;
         this.transaction = transaction;
+        this.regularUser = regularUser;
     }
 
     public Category(CategoryBuilder builder) {
@@ -40,6 +45,7 @@ public class Category {
         this.name = builder.name;
         this.type = builder.type;
         this.transaction = builder.transaction;
+        this.regularUser = builder.regularUser;
     }
 
     public Long getCategoryId() {
@@ -58,6 +64,14 @@ public class Category {
         return transaction;
     }
 
+    public RegularUser getRegularUser() {
+        return regularUser;
+    }
+
+    public void setRegularUser(RegularUser regularUser) {
+        this.regularUser = regularUser;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
@@ -65,6 +79,7 @@ public class Category {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", transaction=" + transaction +
+                ", regularUser=" + regularUser +
                 '}';
     }
 
@@ -73,6 +88,7 @@ public class Category {
         private String name;
         private String type;
         private Transaction transaction;
+        private RegularUser regularUser;
 
         public CategoryBuilder setId(Long categoryId) {
             this.categoryId = categoryId;
@@ -94,11 +110,17 @@ public class Category {
             return this;
         }
 
+        public CategoryBuilder setRegularUser(RegularUser regularUser) {
+            this.regularUser = regularUser;
+            return this;
+        }
+
         public CategoryBuilder copy(Category category) {
             this.categoryId = category.categoryId;
             this.name = category.name;
             this.type = category.type;
             this.transaction = category.transaction;
+            this.regularUser = category.regularUser;
             return this;
         }
 

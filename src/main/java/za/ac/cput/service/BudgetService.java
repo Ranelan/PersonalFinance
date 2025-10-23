@@ -97,4 +97,9 @@ public class BudgetService implements IBudgetService{
     public List<Budget> findAll() {
         return budgetRepository.findAll();
     }
+
+    @Override
+    public List<Budget> findByUserId(Long userId) {
+        return budgetRepository.findByRegularUser_UserID(userId);
+    }
 }

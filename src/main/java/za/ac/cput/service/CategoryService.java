@@ -89,4 +89,9 @@ public class CategoryService implements ICategoryService{
         return categoryRepository.findAll();
     }
 
+    @Override
+    public List<Category> findByUserId(Long userId) {
+        return categoryRepository.findByRegularUser_UserID(userId);
+    }
+
 }

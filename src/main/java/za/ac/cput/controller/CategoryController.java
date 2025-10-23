@@ -85,4 +85,14 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/byUser/{userId}")
+    public ResponseEntity<List<Category>> getByUser(@PathVariable Long userId) {
+        List<Category> categories = categoryService.findByUserId(userId);
+        if (categories != null && !categories.isEmpty()) {
+            return ResponseEntity.ok(categories);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

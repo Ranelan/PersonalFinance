@@ -102,4 +102,14 @@ public class BudgetController {
         }
     }
 
+    @GetMapping("/byUser/{userId}")
+    public ResponseEntity<List<Budget>> getByUser(@PathVariable Long userId) {
+        List<Budget> budgets = budgetService.findByUserId(userId);
+        if (budgets != null && !budgets.isEmpty()) {
+            return ResponseEntity.ok(budgets);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
