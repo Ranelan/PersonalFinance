@@ -8,4 +8,5 @@ public interface ICategoryService extends IService<Category,Long>{
     List<Category> findByName(String name);
     List<Category> findByType(String type);
     List<Category> findAll();
+    List<Category> findByUserId(Long userId);
 }

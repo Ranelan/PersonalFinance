@@ -14,6 +14,7 @@ public interface ITransactionService extends IService<Transaction, Long> {
     List<Transaction> findAll();
     List<Transaction> findByType(String type);
     List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Transaction> findByUserId(Long userId);
 
 
 }

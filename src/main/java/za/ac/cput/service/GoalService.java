@@ -92,4 +92,9 @@ public class GoalService implements IGoalService {
     public List<Goal> findByRegularUser_MembershipID(String membershipId) {
         return goalRepository.findByRegularUser_MembershipID(membershipId);
     }
+
+    @Override
+    public List<Goal> findByUserId(Long userId) {
+        return goalRepository.findByRegularUser_UserID(userId);
+    }
 }

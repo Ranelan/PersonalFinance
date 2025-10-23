@@ -16,4 +16,5 @@ public interface IGoalService extends IService<Goal, Long> {
     List<Goal> findByDeadLine(String deadLine);
     List<Goal> findAll();
     List<Goal> findByRegularUser_MembershipID(String membershipId);
+    List<Goal> findByUserId(Long userId);
 }
