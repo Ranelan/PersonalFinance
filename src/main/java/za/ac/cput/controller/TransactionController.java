@@ -23,6 +23,8 @@ public class TransactionController {
 
     @PostMapping("/create")
     public ResponseEntity<Transaction> create(@RequestBody Transaction transaction){
+        // Ensure the transactionId is null so the DB can auto-generate it
+        transaction.setTransactionId(null);
         Transaction createdTransaction = transactionService.create(transaction);
         return ResponseEntity.ok(createdTransaction);
     }
