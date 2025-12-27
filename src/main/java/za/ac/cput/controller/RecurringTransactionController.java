@@ -64,7 +64,7 @@ public class RecurringTransactionController {
         return updatedRecurringTransaction != null ? ResponseEntity.ok(updatedRecurringTransaction) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             recurringTransactionService.delete(id);
