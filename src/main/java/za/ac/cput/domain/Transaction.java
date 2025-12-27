@@ -26,7 +26,7 @@ public class Transaction {
   @JoinColumn(name = "user_id")
   private RegularUser regularUser;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "category_id")
   @JsonManagedReference
   private Category category;
@@ -58,6 +58,10 @@ public class Transaction {
 
   public Long getTransactionId() {
     return transactionId;
+  }
+
+  public void setTransactionId(Long transactionId) {
+    this.transactionId = transactionId;
   }
 
   public double getAmount() {
