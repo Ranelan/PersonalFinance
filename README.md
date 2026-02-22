@@ -181,8 +181,4 @@ src/
 └── test/                               # Unit and integration tests
 ```
 
-## Running Tests
 
-```bash
-mvn test
-```
