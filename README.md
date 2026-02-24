@@ -12,7 +12,6 @@ A RESTful API built with Spring Boot for managing personal finances, including t
 - **Spring Boot 3.4.4** (Web, Data JPA, Security, Validation)
 - **MySQL** – relational database
 - **JWT (jjwt 0.11.5)** – stateless authentication
-- **SpringDoc OpenAPI 2.1.0** – interactive API documentation (Swagger UI)
 - **Maven** – build & dependency management
 
 ## Prerequisites
