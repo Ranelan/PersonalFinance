@@ -19,7 +19,7 @@ A RESTful API built with Spring Boot for managing personal finances, including t
 
 - Java 21+
 - Maven 3.8+
-- MySQL 8.0+ running locally
+- MySQL 8.0+ 
 
 ## Getting Started
 
